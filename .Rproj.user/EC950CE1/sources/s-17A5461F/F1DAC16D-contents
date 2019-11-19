@@ -1,0 +1,126 @@
+## *********************************************
+## Prédictions du modèle retenu sur Validation set
+## Gabriel Crépeault-Cauchon
+## 07/11/2019
+## *********************************************
+setwd(dirname(rstudioapi::getSourceEditorContext()$path))
+library(mlr)
+library(tidyverse)
+library(gridExtra)
+source('functions/rmse_selon_variable.R')s
+
+## Définir nom du modèle et données à importer
+model_name <- 'modele_c'
+root <- file.path('..', 'R', 'models', model_name)
+test_dt <- read.csv('../data/test.csv')
+test_tsk <- makeRegrTask(data = select(test_dt, -ClNr), target = 'Ultimate')
+
+## Importer le modèle à utiliser pour faire les prédictions
+modele <- read_rds(file.path('models', model_name, paste0(model_name, ".rda")))
+
+## Effectuer les prédictions sur le validation set
+pred <- predict(modele, task = test_tsk)
+
+# Combiner Les prédictions avec les variables explicatives associées
+test_pred <- test_dt %>% 
+    rownames_to_column('id') %>% 
+    mutate_at(vars(id), as.integer) %>% 
+    left_join(pred$data, by = "id")
+
+test_pred %>% 
+    mutate(erreurquad = (truth - response)^2) %>% 
+    group_by(LoB) %>% 
+    summarise(RMSe = sqrt(mean(erreurquad)))
+
+## RMSE moyen (groupé selon une variable) ####
+rmse_selon_variable(test_pred, LoB, show.table = T)
+rmse_selon_variable(test_pred, devYear) + 
+    labs(title = "RMSE moyen selon l'année de développement du sinistre",
+         subtitle = model_name) + 
+    scale_x_discrete(limits = 1:12)
+ggsave(filename = file.path(root, 'pred', "RMSE-moyen-selon-devYear.pdf"))
+rmse_selon_variable(test_pred, cc)
+rmse_selon_variable(test_pred, AQ)
+rmse_selon_variable(test_pred, age)
+rmse_selon_variable(test_pred, inj_part)
+rmse_selon_variable(test_pred, Open)
+rmse_selon_variable(test_pred, RepDel, show.table = T)
+
+moyenne_selon_variable <- function(pred, var){
+    var <- enquo(var)
+    pred %>% 
+        group_by(!!var) %>% 
+        summarise_at(vars(truth, response), mean) %>% 
+        gather('type', 'valeur_moyenne', truth, response) %>% 
+        ggplot(aes(x = !!var)) + 
+        geom_bar(aes(y = valeur_moyenne, fill = type), stat = 'identity', position = 'dodge')
+}
+moyenne_selon_variable(test_pred, cc)
+
+test_pred %>% 
+    group_by(quantile = ntile(response, n = 5)) %>% 
+    summarise(TruthMoyen = mean(truth))
+
+test_pred %>% ggplot(aes(x = truth)) + stat_ecdf() + coord_cartesian(xlim = c(1500, 3000))
+## Réel moyen groupé par quantile des prédictions ####
+test_pred %>% 
+    mutate(
+        quantile = ntile(response, n = 5)
+    ) %>% 
+    mutate(quantile = case_when(
+        quantile == 1 ~ "(0, 20)",
+        quantile == 2 ~ "(20, 40)",
+        quantile == 3 ~ "(40, 60)",
+        quantile == 4 ~ "(60, 80)",
+        quantile == 5 ~ "(80, 100)"
+    )) %>% 
+    group_by(quantile) %>% 
+    summarise(
+        reel_moyen = mean(truth),
+        rmse_moyen = sqrt(mean((truth - response)^2))
+    ) %>% 
+    ggplot(aes(x = quantile)) + 
+    geom_bar(aes(y = reel_moyen),stat = 'identity', fill = 'green', alpha = 0.4, col = 'black') + 
+    geom_line(aes(y = rmse_moyen, col = 'RMSE moyen par quantile'),
+              linetype = 'dashed', group  =1) + 
+    geom_point(aes(y = rmse_moyen), col = 'red') + 
+    theme(legend.position = 'bottom') +
+    coord_cartesian(ylim = c(0, 10000)) +
+    scale_y_discrete(limits = seq(0, 10000, 1000)) + 
+    labs(title = "Valeur réelle moyenne séparée par quantile des prédictions",
+         subtitle = model_name,
+         y = "Valeur réelle moyenne",
+         x = "Regroupement des quantiles de la variable réponse", col = NULL)
+ggsave(filename = file.path(root, 'pred', "Réel-moyen-par-quantile-predit.pdf"))
+
+
+## Graphique du prédit en fonction du réel ####
+## On enlève les <= 0 et on met sur l'échelle log
+##TODO : lire sur la manipulation à faire sur réel/reponse lorsqu'on met sur l'échelle log
+# voir notes ACT2003
+zoom_out_pred <- test_pred %>% 
+    # filter(response > 0) %>% 
+    ggplot(aes(x = Ultimate, y = response)) + 
+    geom_point() + 
+    annotate('rect',
+             xmin = 0, xmax = 200000,
+             ymin = 0, ymax = 200000,
+             alpha = 0.3, col = 'blue') +
+    # geom_vline(xintercept = qq, col = 'red', linetype = 'dashed') + 
+    geom_abline(intercept = 0, slope = 1, 
+                col = 'blue', size = 1, linetype = 'dashed') + 
+    # coord_cartesian(xlim = c(0, 25000), ylim = c(0,25000)) + 
+    labs(y = 'Valeur prédite')
+
+zoom_in_pred <- test_pred %>% 
+    # filter(response > 0) %>% 
+    ggplot(aes(x = Ultimate, y = response)) + 
+    geom_point() + 
+    # geom_vline(xintercept = qq, col = 'red', linetype = 'dashed') + 
+    geom_abline(intercept = 0, slope = 1, 
+                col = 'blue', size = 1, linetype = 'dashed') + 
+    coord_cartesian(xlim = c(0, 200000), ylim = c(0,200000)) + 
+    labs(y = 'Valeur prédite')
+
+zoom <- grid.arrange(zoom_out_pred, zoom_in_pred)
+ggsave(plot = zoom, filename = file.path('models', model_name, "pred", "courbe-predit-reel-zoom.pdf"))

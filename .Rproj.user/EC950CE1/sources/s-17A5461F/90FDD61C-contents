@@ -1,0 +1,29 @@
+## Source file to update pkg_down
+## Cmd+Shift+B : Build le package
+## CMd+Shift+D : Build la documentation avec Roxygen
+
+library(devtools)
+# library(xgbmr)
+library(roxygen2)
+
+pkgdown::build_site()
+
+
+## Si le package devient public, on pourra partager le repo
+install_github(repo = 'gabrielcrepeault/ACT2101_A2019', subdir = 'xgbmr')
+
+
+## Mettre à jour les vignettes (rapport de projet de recherche)
+devtools::build_vignettes()
+
+library(xgbmr)
+vignette(package = 'xgbmr')
+
+
+
+
+
+
+
+
+

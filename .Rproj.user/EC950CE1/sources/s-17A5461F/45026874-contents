@@ -1,0 +1,64 @@
+library(shiny)
+library(tidyverse, quietly = T)
+library(DT, quietly = T)
+
+ui <- fluidPage(
+  titlePanel('Exploration du jeu de données (après manipulation)'),
+  sidebarLayout(
+      ## Sidebar
+      sidebarPanel(
+          uiOutput('select_reponse'),
+          uiOutput('select_exogene'),
+          hr(),
+          numericInput('sample_n', label = "Échantillon aléatoire à prendre", 
+                       min = 1, max = 10000, value = 1000),
+          width = 3
+      ),
+      ## Paneau ou les output vont
+      mainPanel(
+        tabsetPanel(
+          tabPanel('Exploration des données',
+                      plotOutput('custom_plot', brush = "plot_brush"),
+                      dataTableOutput('table')
+          ),
+          tabPanel('Interprétation du modèle',
+                   p("À venir. Bouton pour importer un modèle, et on affiche le feature
+                     imporance et PDP selon une variable d'intérêt")
+          )
+        )
+      )
+  )
+)
+
+server <- function(input, output, session) {
+    dat <- reactive({
+        read.csv('../../data/train_long.csv') %>% sample_n(input$sample_n)
+    })
+    
+  
+    # J'ai mis des choix par défaut
+  output$select_reponse <- renderUI({
+      selectInput('y', 'Sélectionnez la variable en Y',
+                  choices = names(dat())[-1], selected = 'Ultimate')
+  })
+  
+  output$select_exogene <- renderUI({
+      selectInput('x', 'Sélectionnez la variable en X',
+                  choices = names(dat())[-1], selected = 'Paid')
+  })
+  
+  ## Un graphique ben simple
+  output$custom_plot <- renderPlot({
+      # plot(as.formula(paste0(input$y, '~', input$x)), data = dat(), pch = 19)
+      ggplot(aes_string(x = input$x, y = input$y), data = dat()) + geom_point()
+  })
+  
+  ## un DataTable pour voir plus précisément certains points
+  brush_plot <- reactive({
+      brushedPoints(dat(), input$plot_brush, xvar = input$x, yvar = input$y)
+  })
+  
+  output$table <- renderDataTable({datatable(brush_plot())})
+}
+
+shinyApp(ui, server)
