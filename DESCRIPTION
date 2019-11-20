@@ -5,8 +5,8 @@ Version: 0.0.1
 Author: Gabriel Crépeault-Cauchon
 Maintainer: Gabriel Crépeault-Cauchon <gabrielcrepeault@gmail.com>
 Description: À venir.
-License: What license is it under?
+License: CC BY-SA 4.0
 Encoding: UTF-8
 LazyData: true
-url: https://github.com/gabrielcrepeault/ACT2101_A2019
+url: https://github.com/gabrielcrepeault/xgbmr
 RoxygenNote: 6.1.1

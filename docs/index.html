@@ -47,20 +47,20 @@
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Documents
+    Articles
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../doc/rapport_2019.pdf">Projet de recherche A2019</a>
+      <a href="articles/implementation.html">Implémentation en R du modèle</a>
     </li>
   </ul>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/gabrielcrepeault/ACT2101_A2019">
+  <a href="https://github.com/gabrielcrepeault/xgbmr">
     <span class="fa fa-github fa-lg"></span>
      
     Code source
@@ -77,29 +77,64 @@
       
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="modèle-de-micro-réserve-utilisant-lalgorithme-xgboost" class="section level1">
+<div id="implémentation-en-r-dun-modèle-de-micro-réserve-utilisant-lalgorithme-xgboost" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#mod%C3%A8le-de-micro-r%C3%A9serve-utilisant-lalgorithme-xgboost" class="anchor"></a>Modèle de micro-réserve utilisant l’algorithme XGBoost</h1></div>
-<p>Package supportant le projet de recherche de Gabriel Crépeault-Cauchon à l’automne 2019, Université Laval.</p>
-<div id="fonctions-utilisées" class="section level2">
+<a href="#impl%C3%A9mentation-en-r-dun-mod%C3%A8le-de-micro-r%C3%A9serve-utilisant-lalgorithme-xgboost" class="anchor"></a>Implémentation en R d’un modèle de micro-réserve utilisant l’algorithme XGBoost.</h1></div>
+<p>Ce package a pour objectif de contenir tout le matériel nécessaire afin de pouvoir reproduire le projet de recherche de Gabriel Crépeault-Cauchon effectué pour le cours ACT-2101 au cours de la session d’automne 2019 à l’Université Laval.</p>
+<div id="résumé-du-projet-de-recherche" class="section level2">
 <h2 class="hasAnchor">
-<a href="#fonctions-utilis%C3%A9es" class="anchor"></a>Fonctions utilisées</h2>
-<p>La documentation des fonctions qui sont utilisées dans le projet de recherche peuvent être trouvées dans l’onglet <code>References</code>.</p>
+<a href="#r%C3%A9sum%C3%A9-du-projet-de-recherche" class="anchor"></a>Résumé du projet de recherche</h2>
+<p>Le projet de recherche avait pour but de reproduire le modèle de Duval&amp;Pigeon, 2019 , qui propose d’utiliser l’algorithme XGBoost afin de prédire le montant payé à l’ultime d’une réclamation en assurance, afin de pouvoir faire une estimation de la réserve individuelle à appliquer. Dans le cadre du projet de recherche, le modèle a été implémenté avec R sur les données simulées de Gabrielli/Wuthrich:2018</p>
+</div>
+<div id="installation-du-package" class="section level2">
+<h2 class="hasAnchor">
+<a href="#installation-du-package" class="anchor"></a>Installation du package</h2>
+<p>Pour l’instant, le package n’est pas accessible depuis le CRAN. Il est toutefois possible de le télécharger sur votre session R avec la commande suivante :</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1">devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/remote-reexports">install_github</a></span>(<span class="dt">repo =</span> <span class="st">"gabrielcrepeault/xgbmr"</span>)</a></code></pre></div>
+</div>
+<div id="notes-sur-la-documentation" class="section level2">
+<h2 class="hasAnchor">
+<a href="#notes-sur-la-documentation" class="anchor"></a>Notes sur la documentation</h2>
+<p>Dans l’éventualité où ce package pourrait être publié sur le CRAN, la partie de la documentation des différents éléments du package a été faite en anglais. Ce site web sert uniquement à supporter le rapport du projet de recherche.</p>
+</div>
+<div id="éléments-contenus-dans-le-package-xgbmr" class="section level2">
+<h2 class="hasAnchor">
+<a href="#%C3%A9l%C3%A9ments-contenus-dans-le-package-xgbmr" class="anchor"></a>Éléments contenus dans le package <code>xgbmr</code>
+</h2>
+<ul>
+<li>Fonctions personnalisées, principalement utilisée dans les chapitres implémentation et résultats</li>
+<li>Fonction <em>helper</em> qui permettent de faciliter le <em>tuning</em> d’un modèle XGBoost. Ces fonctions peuvent être réutilisés pour ajuster un modèle XGBoost dans un tout autre contexte.</li>
+<li>Application shiny <strong>Black Box Explain</strong>, qui utilise les principales fonctions du package <code>iml</code> afin de visualiser (de façon interactive) l’interprétabilité du modèle (Feature importance, PDP/ICE curves, LIME models, pred-on-truth graphs, etc).</li>
+</ul>
 </div>
 </div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <div class="license">
+    <div class="links">
+<h2>Links</h2>
+<ul class="list-unstyled">
+<li>Original research paper at <br><a href="https://www.mdpi.com/2227-9091/7/3/79">https://​www.mdpi.com/​2227-9091/​7/​3/​79</a>
+</li>
+<li>XGBoost official documentation at <br><a href="https://xgboost.readthedocs.io/en/latest/">https://​xgboost.readthedocs.io/​en/​latest/​</a>
+</li>
+<li>mlr package documentation at <br><a href="https://mlr.mlr-org.com">https://​mlr.mlr-org.com</a>
+</li>
+<li>Individual Claims history simulation machine at <br><a href="https://people.math.ethz.ch/~wmario/simulation.html">https://​people.math.ethz.ch/​~wmario/​simulation.html</a>
+</li>
+</ul>
+</div>
+<div class="license">
 <h2>License</h2>
 <ul class="list-unstyled">
-<li>What license is it under?</li>
+<li><a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a></li>
 </ul>
 </div>
 <div class="developers">
 <h2>Developers</h2>
 <ul class="list-unstyled">
-<li>Gabriel Crépeault-Cauchon <br><small class="roles"> Maintainer </small>  </li>
+<li>
+<a href="https://github.com/gabrielcrepeault">Gabriel Crépeault-Cauchon</a> <br><small class="roles"> Maintainer </small>  </li>
 </ul>
 </div>
 
@@ -107,7 +142,7 @@
 </div>
 
       <footer><div class="copyright">
-  <p>Developed by Gabriel Crépeault-Cauchon.</p>
+  <p>Developed by <a href="https://github.com/gabrielcrepeault">Gabriel Crépeault-Cauchon</a>.</p>
 </div>
 
 <div class="pkgdown">

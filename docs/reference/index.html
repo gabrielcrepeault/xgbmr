@@ -81,20 +81,20 @@
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Documents
+    Articles
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../../doc/rapport_2019.pdf">Projet de recherche A2019</a>
+      <a href="../articles/implementation.html">Implémentation en R du modèle</a>
     </li>
   </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/gabrielcrepeault/ACT2101_A2019">
+  <a href="https://github.com/gabrielcrepeault/xgbmr">
     <span class="fa fa-github fa-lg"></span>
      
     Code source
@@ -126,8 +126,8 @@
     <tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
+          <h2 id="section-example-dataset" class="hasAnchor"><a href="#section-example-dataset" class="anchor"></a>Example Dataset</h2>
+          <p class="section-desc"><p>example dataset used for example in documentation</p></p>
         </th>
       </tr>
       <tr>
@@ -136,19 +136,15 @@
           <p><code><a href="SimulatedIndClaims.html">SimulatedIndClaims</a></code> </p>
         </td>
         <td><p>Simulated data from the</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="black_box_explain.html">black_box_explain()</a></code> </p>
-        </td>
-        <td><p>Black Box explain</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="bsPredDistribution.html">bsPredDistribution()</a></code> </p>
-        </td>
-        <td><p>bsPredDistribution</p></td>
-      </tr><tr>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-data-wrangling" class="hasAnchor"><a href="#section-data-wrangling" class="anchor"></a>Data wrangling</h2>
+          <p class="section-desc"><p>Helper function to do data manipulation</p></p>
+        </th>
+      </tr>
+      <tr>
         
         <td>
           <p><code><a href="censoreDataset.html">censoreDataset()</a></code> </p>
@@ -169,22 +165,18 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="hello.html">hello()</a></code> </p>
+          <p><code><a href="widetolong.html">widetolong()</a></code> </p>
         </td>
-        <td><p>Hello, World!</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="rmse_selon_variable.html">rmse_selon_variable()</a></code> </p>
-        </td>
-        <td><p>rmse_selon_variable</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="setup_training_env.html">setup_training_env()</a></code> </p>
-        </td>
-        <td><p>setup_training_env</p></td>
-      </tr><tr>
+        <td><p>widetolong</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-tuning-helper" class="hasAnchor"><a href="#section-tuning-helper" class="anchor"></a>Tuning helper</h2>
+          <p class="section-desc"><p>Helper function to tune a xgboost model</p></p>
+        </th>
+      </tr>
+      <tr>
         
         <td>
           <p><code><a href="tune_and_update.html">tune_and_update()</a></code> </p>
@@ -196,12 +188,54 @@
           <p><code><a href="tune_nrounds.html">tune_nrounds()</a></code> </p>
         </td>
         <td><p>tune_nrounds</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-training-environment" class="hasAnchor"><a href="#section-training-environment" class="anchor"></a>Training environment</h2>
+          <p class="section-desc"><p>Helper function that generates a directory for a model with specific subdir</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="setup_training_env.html">setup_training_env()</a></code> </p>
+        </td>
+        <td><p>setup_training_env</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-model-quality" class="hasAnchor"><a href="#section-model-quality" class="anchor"></a>Model quality</h2>
+          <p class="section-desc"><p>Helper function to access the quality of the model</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="bsPredDistribution.html">bsPredDistribution()</a></code> </p>
+        </td>
+        <td><p>bsPredDistribution</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="widetolong.html">widetolong()</a></code> </p>
+          <p><code><a href="rmse_selon_variable.html">rmse_selon_variable()</a></code> </p>
         </td>
-        <td><p>widetolong</p></td>
+        <td><p>rmse_selon_variable</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-model-vizualisation" class="hasAnchor"><a href="#section-model-vizualisation" class="anchor"></a>Model vizualisation</h2>
+          <p class="section-desc"><p>Shiny app to help vizualise the interpretability of model and his predictions</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="black_box_explain.html">black_box_explain()</a></code> </p>
+        </td>
+        <td><p>Black Box explain</p></td>
       </tr>
     </tbody>
     </table>
@@ -210,14 +244,19 @@
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#section-all-functions">All functions</a></li>
+      <li><a href="#section-example-dataset">Example Dataset</a></li>
+      <li><a href="#section-data-wrangling">Data wrangling</a></li>
+      <li><a href="#section-tuning-helper">Tuning helper</a></li>
+      <li><a href="#section-training-environment">Training environment</a></li>
+      <li><a href="#section-model-quality">Model quality</a></li>
+      <li><a href="#section-model-vizualisation">Model vizualisation</a></li>
     </ul>
   </div>
 </div>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Gabriel Crépeault-Cauchon.</p>
+  <p>Developed by <a href='https://github.com/gabrielcrepeault'>Gabriel Crépeault-Cauchon</a>.</p>
 </div>
 
 <div class="pkgdown">

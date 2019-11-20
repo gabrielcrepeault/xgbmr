@@ -1,15 +1,65 @@
-title:
+home:
+  title: Implémentation en R d'un modèle de micro-réserve utilisant l'algorithme XGBoost.
+  links:
+    - text: Original research paper
+      href: https://www.mdpi.com/2227-9091/7/3/79
+    - text: XGBoost official documentation
+      href: https://xgboost.readthedocs.io/en/latest/
+    - text: mlr package documentation
+      href: https://mlr.mlr-org.com
+    - text: Individual Claims history simulation machine
+      href: https://people.math.ethz.ch/~wmario/simulation.html
+
+authors:
+  Gabriel Crépeault-Cauchon:
+    href: https://github.com/gabrielcrepeault
+
 template:
   params:
     bootswatch: yeti
+
 navbar:
     components:
         articles:
-            text: Documents
+            text: Articles
             menu:
             - text: Projet de recherche A2019
               href: ../doc/rapport_2019.pdf
+            - text: "---"
+            - text: Exemple d'implémentation en R
+              href: articles/implementation.html
         github:
             icon: fa-github fa-lg
             text: "Code source"
-            href: https://github.com/gabrielcrepeault/ACT2101_A2019
+            href: https://github.com/gabrielcrepeault/xgbmr
+
+reference:
+  - title: Example Dataset
+    desc: example dataset used for example in documentation
+    contents:
+      - SimulatedIndClaims
+  - title: Data wrangling
+    desc: Helper function to do data manipulation
+    contents:
+      - censoreDataset
+      - getAggrTriangle
+      - getLDF
+      - widetolong
+  - title: Tuning helper
+    desc: Helper function to tune a xgboost model
+    contents:
+      - tune_and_update
+      - tune_nrounds
+  - title: Training environment
+    desc: Helper function that generates a directory for a model with specific subdir
+    contents:
+      - setup_training_env
+  - title: Model quality
+    desc: Helper function to access the quality of the model
+    contents:
+      - bsPredDistribution
+      - rmse_selon_variable
+  - title: Model vizualisation
+    desc: Shiny app to help vizualise the interpretability of model and his predictions
+    contents:
+      - black_box_explain

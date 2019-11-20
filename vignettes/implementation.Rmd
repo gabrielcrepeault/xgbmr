@@ -1,0 +1,147 @@
+---
+title: "Implémentation en R du modèle"
+author: "Gabriel Crépeault-Cauchon"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Implémentation en R du modèle}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Importation des données
+Les données simulées sont disponibles à même le package. D'autres packages doivent aussi être importés.
+
+```{r, import-data, echo=TRUE}
+library(xgbmr)
+library(tidyverse)
+library(xgboost)
+library(mlr)
+library(iml)
+library(xtable) # pour des fins de présentation
+dt <- SimulatedIndClaims
+```
+
+## Manipulation des données
+Avant de pouvoir utiliser les données dans l'algorithme XGBoost, on doit d'abord effectuer un certain traitement des données.
+
+### Censuration des données
+Dans la pratique, nous ne connaissons pas encore le vrai montant à l'ultime pour les réclamations qui sont plus récentes. Cet aspect a été tenu en compte, et une fonction du package permet de censurer les réclamations pour lesquelles nous ne sommes pas censé connaître l'information
+
+
+```{r}
+dat <- dt %>% censoreDataset(evalYr = 2005)
+```
+
+
+```{r}
+set.seed(20191024) # Même seed que dans presentation-data.Rnw
+dat %>% 
+    select(ClNr, AY, starts_with('Pay'), real_ultimate) %>% 
+    sample_n(5) %>% 
+  knitr::kable()
+```
+
+## Modèle C : estimation des LDF
+
+```{r, get-train-test-data, echo=TRUE}
+set.seed(20191023)
+index <- makeResampleInstance(
+    desc = makeResampleDesc('Holdout', stratify.cols = 'AY', split = 0.70), 
+    # il faut absolument donner une tâche et un target bidon
+    task = makeRegrTask(data = dt, target = 'Pay00') 
+)
+traindt <- dat[index$train.inds[[1]],]
+testdt <- dat[index$test.inds[[1]],]
+```
+
+
+
+```{r}
+mack_bs_tri <- traindt %>% 
+    getAggrTriangle() %>% 
+    ChainLadder::BootChainLadder(R = 1000)
+
+ldf_bs <- mack_bs_tri$simClaims %>% 
+    apply(3, function(triangle){
+        triangle %>% incr2cum() %>% as.triangle() %>% getLDF()
+    }) %>% t() %>% apply(2, quantile, probs = 0.8)
+
+data.frame(LDF = ldf_bs) %>% t() %>% knitr::kable()
+```
+
+
+
+## Préparer les jeux de données
+
+```{r}
+train_a <- traindt %>%
+    widetolong() %>%
+    filter(complete.cases(.)) %>% # garder les années connues
+    filter(!(Open == 1 & Paid == 0)) %>% # enlever masse à 0
+    select(-AY, -TotalPaid, -Pay, -still, -max_dev_yr) %>% 
+    rename(Ultimate = real_ultimate) %>% 
+    # Arranger le dataset final pour le modèle A
+    select(ClNr:RepDel, devYear, Paid, Open, Ultimate) %>% 
+    as_tibble() 
+
+train_b <- traindt %>% 
+    widetolong() %>%
+    filter(complete.cases(.)) %>%
+    mutate(Ultimate = TotalPaid) %>% 
+    filter(!(Open == 1 & Paid == 0)) %>% # enlever masse à 0
+    filter(Open == 0) %>% 
+    select(-AY, -TotalPaid, -Pay, -still, -max_dev_yr, -real_ultimate) %>% 
+    as_tibble()
+
+train_c <- traindt %>%
+    widetolong() %>%
+    filter(complete.cases(.)) %>% # garder les années connues
+    mutate(Ultimate = case_when(
+        still == 1 ~ TotalPaid * ldf_bs[max_dev_yr + 1],
+        TRUE ~ TotalPaid)) %>% 
+    filter(!(Open == 1 & Paid == 0)) %>% # enlever masse à 0
+    select(-AY, -TotalPaid, -Pay, -still, -max_dev_yr, -real_ultimate) %>% 
+    as_tibble() # pour enlever le tag grouped df
+```
+
+Idem pour le test set : 
+
+
+```{r}
+test <- testdt %>% 
+    widetolong() %>%
+    filter(complete.cases(.)) %>% # garder les années connues
+    rename(Ultimate = real_ultimate) %>% 
+    # Arranger le dataset final pour le modèle A
+    select(ClNr:RepDel, devYear, Paid, Open, Ultimate) %>% 
+    as_tibble()
+```
+
+
+## Entrainement
+Étant donné que les modèles xgboost peuvent être long à rouler, des modèles déjà entrainés sur les données d'exemple sont inclus avec le package. Les hyperparamètres des modèles sont disponibles dans la table suivante : 
+
+```{r}
+fit_a$learner$par.vals  %>% data.frame(Modèle = 'A', .) %>% 
+    bind_rows(fit_b$learner$par.vals  %>% data.frame(Modèle = 'B', .),
+              fit_c$learner$par.vals  %>% data.frame(Modèle = 'C', .)) %>% 
+  knitr::kable()
+```
+
+## Résultats
+
+```{r}
+test_dt <- test
+test_tsk <- makeRegrTask(data = test_dt, target = 'Ultimate')
+```
+
+
+
