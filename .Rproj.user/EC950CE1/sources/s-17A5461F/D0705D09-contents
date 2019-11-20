@@ -1,9 +1,0 @@
-title:
-template:
-  params:
-    bootswatch: yeti
-navbar:
-    right:
-        - icon: fa-github fa-lg
-          text: "Code source"
-          href: https://github.com/gabrielcrepeault/ACT2101_A2019

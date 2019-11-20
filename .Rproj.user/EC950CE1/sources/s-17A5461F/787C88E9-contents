@@ -1,6 +1,0 @@
-title: bonjour
-navbar:
-    right:
-        - icon: fa-github fa-lg
-          text: "github"
-          href: https://github.com/lbusett/MODIStsp/

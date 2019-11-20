@@ -35,9 +35,21 @@ navbar:
 
 reference:
   - title: Example Dataset
-    desc: example dataset used for example in documentation
+    desc: dataset used for example in documentation.
     contents:
       - SimulatedIndClaims
+  - title: Ready-to-use models
+    desc: Already trained models A, B and C
+    contents:
+      - fit_a
+      - fit_b
+      - fit_c
+  - title: Bootstrap predictions (for each models)
+    desc: for each model
+    contents:
+      - bs_pred_a
+      - bs_pred_b
+      - bs_pred_c
   - title: Data wrangling
     desc: Helper function to do data manipulation
     contents:

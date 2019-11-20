@@ -1,8 +1,0 @@
-\documentclass{article}
-\usepackage{pdfpages}
-\VignetteIndexEntry{rapport_2019}
-
-\begin{document}
-% Pour l'instant, j'ai mis un lien vers la dernière version pdf dans le subfolder rapport/
-\includepdf[pages=-, fitpaper=true]{../../rapport/111126819.pdf}
-\end{document}

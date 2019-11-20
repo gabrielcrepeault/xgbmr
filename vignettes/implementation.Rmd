@@ -26,6 +26,7 @@ library(xgboost)
 library(mlr)
 library(iml)
 library(xtable) # pour des fins de présentation
+library(gridExtra)
 dt <- SimulatedIndClaims
 ```
 
@@ -139,9 +140,238 @@ fit_a$learner$par.vals  %>% data.frame(Modèle = 'A', .) %>%
 ## Résultats
 
 ```{r}
-test_dt <- test
+test_dt <- test %>% select(-ClNr)
 test_tsk <- makeRegrTask(data = test_dt, target = 'Ultimate')
 ```
 
+Les modèles sont déjà inclus dans le package pour l'exemple
+```{r}
+pred_a <- predict(fit_a, test_tsk)
+pred_b <- predict(fit_b, test_tsk)
+pred_c <- predict(fit_c, test_tsk)
+```
+
+
+Mettre ensemble les variables explicatives et les prédictions
+```{r}
+test_pred_a <- test_dt %>% 
+    rownames_to_column('id') %>% 
+    mutate_at(vars(id), as.integer) %>% 
+    left_join(pred_a$data, by = "id")
+test_pred_b <- test_dt %>% 
+    rownames_to_column('id') %>% 
+    mutate_at(vars(id), as.integer) %>% 
+    left_join(pred_b$data, by = "id")
+test_pred_c <- test_dt %>% 
+    rownames_to_column('id') %>% 
+    mutate_at(vars(id), as.integer) %>% 
+    left_join(pred_c$data, by = "id")
+```
+
+
+
+## Distribution prédictive des réserves totales (Bootstrap)
+```{r}
+## Vraie réserve (selon données simulées du test set)
+vraie_reserve <- test_dt %>% summarise(paye = sum(Paid), total = sum(Ultimate), R = total - paye)
+
+## Calcul des réserves totales selon chaque modèle
+aa <- apply(bs_pred_a, 2, sum)
+bs_res_a <- (aa - sum(test_dt$Paid)) %>% data.frame(A = .)
+
+bb <- apply(bs_pred_b, 2, sum)
+bs_res_b <- (bb - sum(test_dt$Paid)) %>% data.frame(B = .)
+
+cc <- apply(bs_pred_c, 2, sum)
+bs_res_c <- (cc - sum(test_dt$Paid)) %>% data.frame(C = .)
+```
+
+
+Et on obtient le tableau suivant :
+
+```{r}
+bind_cols(bs_res_a, bs_res_b, bs_res_c) %>% 
+    gather('Modèle', 'Réserve') %>% 
+    group_by(Modèle) %>% 
+    nest() %>% 
+    mutate(
+        moyenne = map_dbl(data,function(x) unlist(x) %>%  mean),
+        sd = map_dbl(data,function(x) unlist(x) %>%  sd),
+        VaR95 = map_dbl(data,function(x) unlist(x) %>%  quantile(., probs = .95)),
+        VaR99 = map_dbl(data,function(x) unlist(x) %>%  quantile(., probs = .99))
+    ) %>% 
+    select(-data) %>% 
+    data.frame() %>% 
+    format(big.mark = ' ', justify = 'centre') %>% 
+  knitr::kable()
+```
+
+Et le graphique suivant : 
+
+```{r}
+bind_cols(bs_res_a, bs_res_b, bs_res_c) %>% 
+    ggplot() + 
+    geom_density(aes(x = A, y = ..density..,  fill = 'A'), n = 2^12, alpha = 0.4) + 
+    geom_density(aes(x = B, y = ..density.., fill = 'B'), n = 2^12, alpha = 0.4) + 
+    geom_density(aes(x = C, y = ..density.., fill = 'C'), n = 2^12, alpha = 0.4) + 
+    theme_classic() + 
+    theme(legend.position = 'bottom') + 
+    labs(fill = 'Modèles', x = 'Réserve totale', y = 'Probabilité') + 
+    geom_vline(xintercept = vraie_reserve$R, linetype = 'dashed')
+```
+
+
+### Graphique des prédictions en fonction de la vraie valeur
+```{r}
+zoom_out_pred <- pred_c$data %>% 
+    # filter(response > 0) %>% 
+    ggplot(aes(x = truth, y = response)) + 
+    geom_point() + 
+    annotate('rect',
+             xmin = 0, xmax = 200000,
+             ymin = 0, ymax = 200000,
+             alpha = 0.3, col = 'blue') +
+    # geom_vline(xintercept = qq, col = 'red', linetype = 'dashed') + 
+    geom_abline(intercept = 0, slope = 1, 
+                col = 'blue', size = 1, linetype = 'dashed') + 
+    # coord_cartesian(xlim = c(0, 25000), ylim = c(0,25000)) + 
+    labs(y = 'Valeur prédite')
+
+zoom_in_pred <- pred_c$data %>% 
+    # filter(response > 0) %>% 
+    ggplot(aes(x = truth, y = response)) + 
+    geom_point() + 
+    # geom_vline(xintercept = qq, col = 'red', linetype = 'dashed') + 
+    geom_abline(intercept = 0, slope = 1, 
+                col = 'blue', size = 1, linetype = 'dashed') + 
+    coord_cartesian(xlim = c(0, 200000), ylim = c(0,200000)) + 
+    labs(y = 'Valeur prédite')
+zoom <- arrangeGrob(zoom_out_pred, zoom_in_pred)
+plot(zoom)
+```
+
+
+### Prediction Lift
+
+```{r, prediction-lift}
+pred_a$data %>% 
+    rename(A = response) %>% 
+    mutate(
+        B = pred_b$data$response,
+        C = pred_c$data$response
+    ) %>% 
+    gather('Modèle', 'response', A,B,C) %>% 
+    group_by(Modèle) %>% nest() %>% 
+    mutate(quantile = map(data, function(dt){
+        dt %>% 
+            transmute(quantile = ntile(response, n = 5))
+    })) %>% 
+    unnest(cols = c(data, quantile)) %>% select(-id) %>% 
+    group_by(Modèle, quantile) %>% 
+    summarise(
+        reel_moyen = mean(truth),
+        rmse_moyen = sqrt(mean((truth - response)^2))
+    ) %>% 
+    mutate(quantile = case_when(
+        quantile == 1 ~ "(0, 20)",
+        quantile == 2 ~ "(20, 40)",
+        quantile == 3 ~ "(40, 60)",
+        quantile == 4 ~ "(60, 80)",
+        quantile == 5 ~ "(80, 100)"
+    )) %>% 
+    ggplot(aes(x = quantile)) + 
+    geom_bar(aes(y = reel_moyen),stat = 'identity', fill = 'green',
+             alpha = 0.4, col = 'black') + 
+    geom_line(aes(y = rmse_moyen, col = 'RMSE moyen par quantile'),
+              linetype = 'dashed', group  =1) + 
+    geom_point(aes(y = rmse_moyen), col = 'red') + 
+    theme(legend.position = 'bottom', 
+          axis.text = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
+    coord_cartesian(ylim = c(0, 15000)) +
+    labs(
+        y = "Valeur réelle moyenne",
+        x = "Regroupement des quantiles de la variable réponse", col = NULL) + 
+    facet_grid(. ~ Modèle)
+```
+
+
+### RMSE selon devYear
+
+```{r}
+rmse_selon_variable(test_pred_c, devYear) + 
+    scale_x_discrete(limits = 0:11)
+```
+
+
+### Graphique des résidus du modèle C
+
+```{r}
+set.seed(2019)
+pred_a$data %>% 
+    sample_frac(.1) %>% 
+    mutate(erreur = truth - response) %>% 
+    ggplot() + 
+    geom_histogram(aes(x = erreur), binwidth = 100) + 
+    coord_cartesian(xlim = c(-2000, 2000)) + 
+    labs(x = expression(epsilon = y[i] - hat(y)[i]),
+         y = 'Fréquence',
+         caption = 'Échantillon aléatoire de 10% des prédictions sur les données de validation') + 
+    scale_y_discrete(limits = seq(0, 2000, 100)) 
+```
+
+
+
+
+# Interptétabilité des modèles
+
+```{r}
+set.seed(2019)
+predictor_a <- test_dt %>%
+    # On sélectionne 30 observations par année de développement
+    group_by(devYear) %>% sample_n(30) %>%
+    # on rammène en tibble car iml n'accepte pas un 'grouped_df' de dplyr
+    as_tibble() %>% 
+    Predictor$new(model = fit_a, data = select(., -Ultimate), y= select(., Ultimate))
+predictor_b <- test_dt %>%
+    # On sélectionne 30 observations par année de développement
+    group_by(devYear) %>% sample_n(30) %>%
+    # on rammène en tibble car iml n'accepte pas un 'grouped_df' de dplyr
+    as_tibble() %>% 
+    Predictor$new(model = fit_b, data = select(., -Ultimate), y= select(., Ultimate))
+predictor_c <- test_dt %>%
+    # On sélectionne 30 observations par année de développement
+    group_by(devYear) %>% sample_n(30) %>%
+    # on rammène en tibble car iml n'accepte pas un 'grouped_df' de dplyr
+    as_tibble() %>% 
+    Predictor$new(model = fit_a, data = select(., -Ultimate), y= select(., Ultimate))
+```
+
+
+### Graphique des Feature importance
+
+```{r, feature-importance}
+varimp_a <- FeatureImp$new(predictor_a, loss = "mse") %>% plot() + theme_classic()
+varimp_b <- FeatureImp$new(predictor_b, loss = "mse") %>% plot() + theme_classic()
+varimp_c <- FeatureImp$new(predictor_c, loss = "mse") %>% plot() + theme_classic()
+# grid.arrange(varimp_a, varimp_b, varimp_c, nrow = 3)
+varimp_c
+```
+
+### PDP/ICE plots
+
+```{r, pdp-ice-plots}
+var2check <- c('Paid', 'Open')
+pdp_ice <- lapply(var2check,
+                 function(var){
+                     FeatureEffect$new(predictor_a,
+                                       feature = var,
+                                       method = 'pdp+ice',
+                                       center.at = 0) %>% 
+                         plot() + theme_classic() + 
+                         theme(axis.text = element_text(angle = 90, hjust = 1, vjust = 0.5))
+                 })
+# Produire les 4 graphiques dans une seule figure.
+do.call('grid.arrange', pdp_ice)
+```
 
 
