@@ -9,14 +9,12 @@ bsPredDistribution(learner, train_tsk, test_tsk, B = 100)
 \arguments{
 \item{learner}{Leaner mlr utilisé pour fiter les modèles}
 
-\item{train_tsk}{Tâche mlr d'entrainement}
+\item{train_tsk}{Tâche mlr de validation}
 
 \item{B}{Nombre d'échantillonage Bootstrap à effectuer. Défaut = 100}
-
-\item{train_tsk}{Tâche mlr de validation}
 }
 \value{
-Un data.frame contenant une ligne par observations, une colonne par prédiction 
+Un data.frame contenant une ligne par observations, une colonne par prédiction
 Bootstrap (i.e. n lignes x B colonnes).
 }
 \description{

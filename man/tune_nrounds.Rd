@@ -4,8 +4,15 @@
 \alias{tune_nrounds}
 \title{tune_nrounds}
 \usage{
-tune_nrounds(learner, task, root, iters = 1000, plot = T, export = T,
-  early_stopping_rounds = 10)
+tune_nrounds(
+  learner,
+  task,
+  root,
+  iters = 1000,
+  plot = T,
+  export = T,
+  early_stopping_rounds = 10
+)
 }
 \description{
 Fonction wrapper pour utilier la fonction xgb.cv du package xgboost

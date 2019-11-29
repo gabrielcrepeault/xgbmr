@@ -4,8 +4,7 @@
 \alias{tune_and_update}
 \title{tune_and_update}
 \usage{
-tune_and_update(learner, task, param_set, plot = T, show.info = T,
-  root)
+tune_and_update(learner, task, param_set, plot = T, show.info = T, root)
 }
 \arguments{
 \item{learner}{Un objet R de classe "Learner"}
