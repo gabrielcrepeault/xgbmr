@@ -1,7 +1,7 @@
 Package: xgbmr
 Type: Package
 Title: Implémentation en R d'un modèle de micro-réserve utilisant l'algorithme XGBoost.
-Version: 0.0.1
+Version: 0.0.2
 Author: Gabriel Crépeault-Cauchon
 Maintainer: Gabriel Crépeault-Cauchon <gabrielcrepeault@gmail.com>
 Description: À venir.
