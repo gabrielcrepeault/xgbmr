@@ -17,3 +17,6 @@ Fonction qui permet de prendre un datasets provenant de la machine à simulation
 <mettre le nom de l'auteur> et d'en obtenir un triangle de paiements cumulatifs (utilisé
 par la suite dans des techniques ChainLadder).
 }
+\details{
+La variable de l'année d'accident doit s'appeler AY (pour accident Year)
+}

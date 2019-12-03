@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Implémentation en R du modèle • xgbmr</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/yeti/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Implémentation en R du modèle">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
@@ -30,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">xgbmr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.3</span>
       </span>
     </div>
 
@@ -38,7 +39,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -53,7 +54,11 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/implementation.html">Implémentation en R du modèle</a>
+      <a href="../../doc/rapport_2019.pdf">Projet de recherche A2019</a>
+    </li>
+    <li class="divider">
+    <li>
+      <a href="../articles/implementation.html">Exemple d'implémentation en R</a>
     </li>
   </ul>
 </li>
@@ -75,13 +80,14 @@
 <!--/.navbar -->
 
       
+
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>Implémentation en R du modèle</h1>
                         <h4 class="author">Gabriel Crépeault-Cauchon</h4>
             
-            <h4 class="date">2019-11-20</h4>
+            <h4 class="date">2019-12-03</h4>
       
       
       <div class="hidden name"><code>implementation.Rmd</code></div>
@@ -90,31 +96,31 @@
 
     
     
-<div id="importation-des-donnees" class="section level2">
+<div id="importation-des-données" class="section level2">
 <h2 class="hasAnchor">
-<a href="#importation-des-donnees" class="anchor"></a>Importation des données</h2>
+<a href="#importation-des-donn%C3%A9es" class="anchor"></a>Importation des données</h2>
 <p>Les données simulées sont disponibles à même le package. D’autres packages doivent aussi être importés.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(xgbmr)</a>
-<a class="sourceLine" id="cb1-2" title="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(tidyverse)</a>
-<a class="sourceLine" id="cb1-3" title="3"><span class="co">#&gt; ── Attaching packages ─────────────────────────────────────────────── tidyverse 1.2.1 ──</span></a>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(xgbmr)</a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(tidyverse)</a>
+<a class="sourceLine" id="cb1-3" title="3"><span class="co">#&gt; ── Attaching packages ──────────────────────────────────────────────────────── tidyverse 1.3.0 ──</span></a>
 <a class="sourceLine" id="cb1-4" title="4"><span class="co">#&gt; ✔ ggplot2 3.2.1     ✔ purrr   0.3.3</span></a>
 <a class="sourceLine" id="cb1-5" title="5"><span class="co">#&gt; ✔ tibble  2.1.3     ✔ dplyr   0.8.3</span></a>
 <a class="sourceLine" id="cb1-6" title="6"><span class="co">#&gt; ✔ tidyr   1.0.0     ✔ stringr 1.4.0</span></a>
 <a class="sourceLine" id="cb1-7" title="7"><span class="co">#&gt; ✔ readr   1.3.1     ✔ forcats 0.4.0</span></a>
-<a class="sourceLine" id="cb1-8" title="8"><span class="co">#&gt; ── Conflicts ────────────────────────────────────────────────── tidyverse_conflicts() ──</span></a>
+<a class="sourceLine" id="cb1-8" title="8"><span class="co">#&gt; ── Conflicts ─────────────────────────────────────────────────────────── tidyverse_conflicts() ──</span></a>
 <a class="sourceLine" id="cb1-9" title="9"><span class="co">#&gt; ✖ dplyr::filter() masks stats::filter()</span></a>
 <a class="sourceLine" id="cb1-10" title="10"><span class="co">#&gt; ✖ dplyr::lag()    masks stats::lag()</span></a>
-<a class="sourceLine" id="cb1-11" title="11"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(xgboost)</a>
+<a class="sourceLine" id="cb1-11" title="11"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(xgboost)</a>
 <a class="sourceLine" id="cb1-12" title="12"><span class="co">#&gt; </span></a>
 <a class="sourceLine" id="cb1-13" title="13"><span class="co">#&gt; Attaching package: 'xgboost'</span></a>
 <a class="sourceLine" id="cb1-14" title="14"><span class="co">#&gt; The following object is masked from 'package:dplyr':</span></a>
 <a class="sourceLine" id="cb1-15" title="15"><span class="co">#&gt; </span></a>
 <a class="sourceLine" id="cb1-16" title="16"><span class="co">#&gt;     slice</span></a>
-<a class="sourceLine" id="cb1-17" title="17"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(mlr)</a>
+<a class="sourceLine" id="cb1-17" title="17"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(mlr)</a>
 <a class="sourceLine" id="cb1-18" title="18"><span class="co">#&gt; Loading required package: ParamHelpers</span></a>
-<a class="sourceLine" id="cb1-19" title="19"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(iml)</a>
-<a class="sourceLine" id="cb1-20" title="20"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(xtable) <span class="co"># pour des fins de présentation</span></a>
-<a class="sourceLine" id="cb1-21" title="21"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(gridExtra)</a>
+<a class="sourceLine" id="cb1-19" title="19"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(iml)</a>
+<a class="sourceLine" id="cb1-20" title="20"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(xtable) <span class="co"># pour des fins de présentation</span></a>
+<a class="sourceLine" id="cb1-21" title="21"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(gridExtra)</a>
 <a class="sourceLine" id="cb1-22" title="22"><span class="co">#&gt; </span></a>
 <a class="sourceLine" id="cb1-23" title="23"><span class="co">#&gt; Attaching package: 'gridExtra'</span></a>
 <a class="sourceLine" id="cb1-24" title="24"><span class="co">#&gt; The following object is masked from 'package:dplyr':</span></a>
@@ -122,20 +128,20 @@
 <a class="sourceLine" id="cb1-26" title="26"><span class="co">#&gt;     combine</span></a>
 <a class="sourceLine" id="cb1-27" title="27">dt &lt;-<span class="st"> </span>SimulatedIndClaims</a></code></pre></div>
 </div>
-<div id="manipulation-des-donnees" class="section level2">
+<div id="manipulation-des-données" class="section level2">
 <h2 class="hasAnchor">
-<a href="#manipulation-des-donnees" class="anchor"></a>Manipulation des données</h2>
+<a href="#manipulation-des-donn%C3%A9es" class="anchor"></a>Manipulation des données</h2>
 <p>Avant de pouvoir utiliser les données dans l’algorithme XGBoost, on doit d’abord effectuer un certain traitement des données.</p>
-<div id="censuration-des-donnees" class="section level3">
+<div id="censuration-des-données" class="section level3">
 <h3 class="hasAnchor">
-<a href="#censuration-des-donnees" class="anchor"></a>Censuration des données</h3>
+<a href="#censuration-des-donn%C3%A9es" class="anchor"></a>Censuration des données</h3>
 <p>Dans la pratique, nous ne connaissons pas encore le vrai montant à l’ultime pour les réclamations qui sont plus récentes. Cet aspect a été tenu en compte, et une fonction du package permet de censurer les réclamations pour lesquelles nous ne sommes pas censé connaître l’information</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">dat &lt;-<span class="st"> </span>dt <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/censoreDataset.html">censoreDataset</a></span>(<span class="dt">evalYr =</span> <span class="dv">2005</span>)</a></code></pre></div>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Random">set.seed</a></span>(<span class="dv">20191024</span>) <span class="co"># Même seed que dans presentation-data.Rnw</span></a>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="dv">20191024</span>) <span class="co"># Même seed que dans presentation-data.Rnw</span></a>
 <a class="sourceLine" id="cb3-2" title="2">dat <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb3-3" title="3"><span class="st">    </span><span class="kw">select</span>(ClNr, AY, <span class="kw">starts_with</span>(<span class="st">'Pay'</span>), real_ultimate) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb3-4" title="4"><span class="st">    </span><span class="kw">sample_n</span>(<span class="dv">5</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb3-5" title="5"><span class="st">  </span>knitr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/knitr/topics/kable">kable</a></span>()</a></code></pre></div>
+<a class="sourceLine" id="cb3-5" title="5"><span class="st">  </span>knitr<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>()</a></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="right">ClNr</th>
@@ -244,20 +250,20 @@
 </table>
 </div>
 </div>
-<div id="modele-c-estimation-des-ldf" class="section level2">
+<div id="modèle-c-estimation-des-ldf" class="section level2">
 <h2 class="hasAnchor">
-<a href="#modele-c-estimation-des-ldf" class="anchor"></a>Modèle C : estimation des LDF</h2>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Random">set.seed</a></span>(<span class="dv">20191023</span>)</a>
-<a class="sourceLine" id="cb4-2" title="2">index &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/mlr/topics/makeResampleInstance">makeResampleInstance</a></span>(</a>
-<a class="sourceLine" id="cb4-3" title="3">    <span class="dt">desc =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/mlr/topics/makeResampleDesc">makeResampleDesc</a></span>(<span class="st">'Holdout'</span>, <span class="dt">stratify.cols =</span> <span class="st">'AY'</span>, <span class="dt">split =</span> <span class="fl">0.70</span>), </a>
+<a href="#mod%C3%A8le-c-estimation-des-ldf" class="anchor"></a>Modèle C : estimation des LDF</h2>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="dv">20191023</span>)</a>
+<a class="sourceLine" id="cb4-2" title="2">index &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/mlr/man/makeResampleInstance.html">makeResampleInstance</a></span>(</a>
+<a class="sourceLine" id="cb4-3" title="3">    <span class="dt">desc =</span> <span class="kw"><a href="https://rdrr.io/pkg/mlr/man/makeResampleDesc.html">makeResampleDesc</a></span>(<span class="st">'Holdout'</span>, <span class="dt">stratify.cols =</span> <span class="st">'AY'</span>, <span class="dt">split =</span> <span class="fl">0.70</span>), </a>
 <a class="sourceLine" id="cb4-4" title="4">    <span class="co"># il faut absolument donner une tâche et un target bidon</span></a>
-<a class="sourceLine" id="cb4-5" title="5">    <span class="dt">task =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/mlr/topics/RegrTask">makeRegrTask</a></span>(<span class="dt">data =</span> dt, <span class="dt">target =</span> <span class="st">'Pay00'</span>) </a>
+<a class="sourceLine" id="cb4-5" title="5">    <span class="dt">task =</span> <span class="kw"><a href="https://rdrr.io/pkg/mlr/man/RegrTask.html">makeRegrTask</a></span>(<span class="dt">data =</span> dt, <span class="dt">target =</span> <span class="st">'Pay00'</span>) </a>
 <a class="sourceLine" id="cb4-6" title="6">)</a>
 <a class="sourceLine" id="cb4-7" title="7">traindt &lt;-<span class="st"> </span>dat[index<span class="op">$</span>train.inds[[<span class="dv">1</span>]],]</a>
 <a class="sourceLine" id="cb4-8" title="8">testdt &lt;-<span class="st"> </span>dat[index<span class="op">$</span>test.inds[[<span class="dv">1</span>]],]</a></code></pre></div>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">mack_bs_tri &lt;-<span class="st"> </span>traindt <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb5-2" title="2"><span class="st">    </span><span class="kw"><a href="../reference/getAggrTriangle.html">getAggrTriangle</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb5-3" title="3"><span class="st">    </span>ChainLadder<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/ChainLadder/topics/BootChainLadder">BootChainLadder</a></span>(<span class="dt">R =</span> <span class="dv">1000</span>)</a>
+<a class="sourceLine" id="cb5-3" title="3"><span class="st">    </span>ChainLadder<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/ChainLadder/man/BootChainLadder.html">BootChainLadder</a></span>(<span class="dt">R =</span> <span class="dv">1000</span>)</a>
 <a class="sourceLine" id="cb5-4" title="4"><span class="co">#&gt; </span></a>
 <a class="sourceLine" id="cb5-5" title="5"><span class="co">#&gt; Welcome to ChainLadder version 0.2.10</span></a>
 <a class="sourceLine" id="cb5-6" title="6"><span class="co">#&gt; </span></a>
@@ -273,11 +279,11 @@
 <a class="sourceLine" id="cb5-16" title="16"><span class="co">#&gt; suppressPackageStartupMessages(library(ChainLadder))</span></a>
 <a class="sourceLine" id="cb5-17" title="17"></a>
 <a class="sourceLine" id="cb5-18" title="18">ldf_bs &lt;-<span class="st"> </span>mack_bs_tri<span class="op">$</span>simClaims <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb5-19" title="19"><span class="st">    </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/apply">apply</a></span>(<span class="dv">3</span>, <span class="cf">function</span>(triangle){</a>
+<a class="sourceLine" id="cb5-19" title="19"><span class="st">    </span><span class="kw"><a href="https://rdrr.io/r/base/apply.html">apply</a></span>(<span class="dv">3</span>, <span class="cf">function</span>(triangle){</a>
 <a class="sourceLine" id="cb5-20" title="20">        triangle <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">incr2cum</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.triangle</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="../reference/getLDF.html">getLDF</a></span>()</a>
-<a class="sourceLine" id="cb5-21" title="21">    }) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/t">t</a></span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/apply">apply</a></span>(<span class="dv">2</span>, quantile, <span class="dt">probs =</span> <span class="fl">0.8</span>)</a>
+<a class="sourceLine" id="cb5-21" title="21">    }) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/t.html">t</a></span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/apply.html">apply</a></span>(<span class="dv">2</span>, quantile, <span class="dt">probs =</span> <span class="fl">0.8</span>)</a>
 <a class="sourceLine" id="cb5-22" title="22"></a>
-<a class="sourceLine" id="cb5-23" title="23"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">LDF =</span> ldf_bs) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/t">t</a></span>() <span class="op">%&gt;%</span><span class="st"> </span>knitr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/knitr/topics/kable">kable</a></span>()</a></code></pre></div>
+<a class="sourceLine" id="cb5-23" title="23"><span class="kw"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="dt">LDF =</span> ldf_bs) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/t.html">t</a></span>() <span class="op">%&gt;%</span><span class="st"> </span>knitr<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>()</a></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th></th>
@@ -296,28 +302,28 @@
 </tr></thead>
 <tbody><tr class="odd">
 <td>LDF</td>
-<td align="right">2.1919</td>
-<td align="right">1.3793</td>
-<td align="right">1.2257</td>
-<td align="right">1.1635</td>
-<td align="right">1.13182</td>
-<td align="right">1.106</td>
-<td align="right">1.0895</td>
-<td align="right">1.0765</td>
-<td align="right">1.0676</td>
-<td align="right">1.0627</td>
-<td align="right">1.057</td>
-<td align="right">1.05</td>
+<td align="right">2.0875</td>
+<td align="right">1.3137</td>
+<td align="right">1.1673</td>
+<td align="right">1.1081</td>
+<td align="right">1.07792</td>
+<td align="right">1.0533</td>
+<td align="right">1.0376</td>
+<td align="right">1.0252</td>
+<td align="right">1.0168</td>
+<td align="right">1.0121</td>
+<td align="right">1.0066</td>
+<td align="right">1</td>
 </tr></tbody>
 </table>
 </div>
-<div id="preparer-les-jeux-de-donnees" class="section level2">
+<div id="préparer-les-jeux-de-données" class="section level2">
 <h2 class="hasAnchor">
-<a href="#preparer-les-jeux-de-donnees" class="anchor"></a>Préparer les jeux de données</h2>
+<a href="#pr%C3%A9parer-les-jeux-de-donn%C3%A9es" class="anchor"></a>Préparer les jeux de données</h2>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">train_a &lt;-<span class="st"> </span>traindt <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb6-2" title="2"><span class="st">    </span><span class="kw"><a href="../reference/widetolong.html">widetolong</a></span>() <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb6-3" title="3"><span class="st">    </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/filter">filter</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/complete.cases">complete.cases</a></span>(.)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># garder les années connues</span></a>
-<a class="sourceLine" id="cb6-4" title="4"><span class="st">    </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/filter">filter</a></span>(<span class="op">!</span>(Open <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">&amp;</span><span class="st"> </span>Paid <span class="op">==</span><span class="st"> </span><span class="dv">0</span>)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># enlever masse à 0</span></a>
+<a class="sourceLine" id="cb6-3" title="3"><span class="st">    </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/complete.cases.html">complete.cases</a></span>(.)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># garder les années connues</span></a>
+<a class="sourceLine" id="cb6-4" title="4"><span class="st">    </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="op">!</span>(Open <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">&amp;</span><span class="st"> </span>Paid <span class="op">==</span><span class="st"> </span><span class="dv">0</span>)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># enlever masse à 0</span></a>
 <a class="sourceLine" id="cb6-5" title="5"><span class="st">    </span><span class="kw">select</span>(<span class="op">-</span>AY, <span class="op">-</span>TotalPaid, <span class="op">-</span>Pay, <span class="op">-</span>still, <span class="op">-</span>max_dev_yr) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb6-6" title="6"><span class="st">    </span><span class="kw">rename</span>(<span class="dt">Ultimate =</span> real_ultimate) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb6-7" title="7"><span class="st">    </span><span class="co"># Arranger le dataset final pour le modèle A</span></a>
@@ -326,26 +332,26 @@
 <a class="sourceLine" id="cb6-10" title="10"></a>
 <a class="sourceLine" id="cb6-11" title="11">train_b &lt;-<span class="st"> </span>traindt <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb6-12" title="12"><span class="st">    </span><span class="kw"><a href="../reference/widetolong.html">widetolong</a></span>() <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb6-13" title="13"><span class="st">    </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/filter">filter</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/complete.cases">complete.cases</a></span>(.)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb6-13" title="13"><span class="st">    </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/complete.cases.html">complete.cases</a></span>(.)) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb6-14" title="14"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">Ultimate =</span> TotalPaid) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb6-15" title="15"><span class="st">    </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/filter">filter</a></span>(<span class="op">!</span>(Open <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">&amp;</span><span class="st"> </span>Paid <span class="op">==</span><span class="st"> </span><span class="dv">0</span>)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># enlever masse à 0</span></a>
-<a class="sourceLine" id="cb6-16" title="16"><span class="st">    </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/filter">filter</a></span>(Open <span class="op">==</span><span class="st"> </span><span class="dv">0</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb6-15" title="15"><span class="st">    </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="op">!</span>(Open <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">&amp;</span><span class="st"> </span>Paid <span class="op">==</span><span class="st"> </span><span class="dv">0</span>)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># enlever masse à 0</span></a>
+<a class="sourceLine" id="cb6-16" title="16"><span class="st">    </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(Open <span class="op">==</span><span class="st"> </span><span class="dv">0</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb6-17" title="17"><span class="st">    </span><span class="kw">select</span>(<span class="op">-</span>AY, <span class="op">-</span>TotalPaid, <span class="op">-</span>Pay, <span class="op">-</span>still, <span class="op">-</span>max_dev_yr, <span class="op">-</span>real_ultimate) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb6-18" title="18"><span class="st">    </span><span class="kw">as_tibble</span>()</a>
 <a class="sourceLine" id="cb6-19" title="19"></a>
 <a class="sourceLine" id="cb6-20" title="20">train_c &lt;-<span class="st"> </span>traindt <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb6-21" title="21"><span class="st">    </span><span class="kw"><a href="../reference/widetolong.html">widetolong</a></span>() <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb6-22" title="22"><span class="st">    </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/filter">filter</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/complete.cases">complete.cases</a></span>(.)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># garder les années connues</span></a>
+<a class="sourceLine" id="cb6-22" title="22"><span class="st">    </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/complete.cases.html">complete.cases</a></span>(.)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># garder les années connues</span></a>
 <a class="sourceLine" id="cb6-23" title="23"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">Ultimate =</span> <span class="kw">case_when</span>(</a>
 <a class="sourceLine" id="cb6-24" title="24">        still <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">~</span><span class="st"> </span>TotalPaid <span class="op">*</span><span class="st"> </span>ldf_bs[max_dev_yr <span class="op">+</span><span class="st"> </span><span class="dv">1</span>],</a>
 <a class="sourceLine" id="cb6-25" title="25">        <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> </span>TotalPaid)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb6-26" title="26"><span class="st">    </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/filter">filter</a></span>(<span class="op">!</span>(Open <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">&amp;</span><span class="st"> </span>Paid <span class="op">==</span><span class="st"> </span><span class="dv">0</span>)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># enlever masse à 0</span></a>
+<a class="sourceLine" id="cb6-26" title="26"><span class="st">    </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="op">!</span>(Open <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">&amp;</span><span class="st"> </span>Paid <span class="op">==</span><span class="st"> </span><span class="dv">0</span>)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># enlever masse à 0</span></a>
 <a class="sourceLine" id="cb6-27" title="27"><span class="st">    </span><span class="kw">select</span>(<span class="op">-</span>AY, <span class="op">-</span>TotalPaid, <span class="op">-</span>Pay, <span class="op">-</span>still, <span class="op">-</span>max_dev_yr, <span class="op">-</span>real_ultimate) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb6-28" title="28"><span class="st">    </span><span class="kw">as_tibble</span>() <span class="co"># pour enlever le tag grouped df</span></a></code></pre></div>
 <p>Idem pour le test set :</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">test &lt;-<span class="st"> </span>testdt <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb7-2" title="2"><span class="st">    </span><span class="kw"><a href="../reference/widetolong.html">widetolong</a></span>() <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb7-3" title="3"><span class="st">    </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/filter">filter</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/complete.cases">complete.cases</a></span>(.)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># garder les années connues</span></a>
+<a class="sourceLine" id="cb7-3" title="3"><span class="st">    </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/complete.cases.html">complete.cases</a></span>(.)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># garder les années connues</span></a>
 <a class="sourceLine" id="cb7-4" title="4"><span class="st">    </span><span class="kw">rename</span>(<span class="dt">Ultimate =</span> real_ultimate) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb7-5" title="5"><span class="st">    </span><span class="co"># Arranger le dataset final pour le modèle A</span></a>
 <a class="sourceLine" id="cb7-6" title="6"><span class="st">    </span><span class="kw">select</span>(ClNr<span class="op">:</span>RepDel, devYear, Paid, Open, Ultimate) <span class="op">%&gt;%</span><span class="st"> </span></a>
@@ -355,19 +361,19 @@
 <h2 class="hasAnchor">
 <a href="#entrainement" class="anchor"></a>Entrainement</h2>
 <p>Étant donné que les modèles xgboost peuvent être long à rouler, des modèles déjà entrainés sur les données d’exemple sont inclus avec le package. Les hyperparamètres des modèles sont disponibles dans la table suivante :</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1">fit_a<span class="op">$</span>learner<span class="op">$</span>par.vals  <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(Modè<span class="dt">le =</span> <span class="st">'A'</span>, .) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb8-2" title="2"><span class="st">    </span><span class="kw">bind_rows</span>(fit_b<span class="op">$</span>learner<span class="op">$</span>par.vals  <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(Modè<span class="dt">le =</span> <span class="st">'B'</span>, .),</a>
-<a class="sourceLine" id="cb8-3" title="3">              fit_c<span class="op">$</span>learner<span class="op">$</span>par.vals  <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(Modè<span class="dt">le =</span> <span class="st">'C'</span>, .)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb8-4" title="4"><span class="st">  </span>knitr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/knitr/topics/kable">kable</a></span>()</a>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1">fit_a<span class="op">$</span>learner<span class="op">$</span>par.vals  <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(Modè<span class="dt">le =</span> <span class="st">'A'</span>, .) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb8-2" title="2"><span class="st">    </span><span class="kw">bind_rows</span>(fit_b<span class="op">$</span>learner<span class="op">$</span>par.vals  <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(Modè<span class="dt">le =</span> <span class="st">'B'</span>, .),</a>
+<a class="sourceLine" id="cb8-3" title="3">              fit_c<span class="op">$</span>learner<span class="op">$</span>par.vals  <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(Modè<span class="dt">le =</span> <span class="st">'C'</span>, .)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb8-4" title="4"><span class="st">  </span>knitr<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>()</a>
 <a class="sourceLine" id="cb8-5" title="5"><span class="co">#&gt; Warning in bind_rows_(x, .id): Unequal factor levels: coercing to character</span></a>
-<a class="sourceLine" id="cb8-6" title="6"><span class="co">#&gt; Warning in bind_rows_(x, .id): binding character and factor vector,</span></a>
-<a class="sourceLine" id="cb8-7" title="7"><span class="co">#&gt; coercing into character vector</span></a>
+<a class="sourceLine" id="cb8-6" title="6"><span class="co">#&gt; Warning in bind_rows_(x, .id): binding character and factor vector, coercing</span></a>
+<a class="sourceLine" id="cb8-7" title="7"><span class="co">#&gt; into character vector</span></a>
 <a class="sourceLine" id="cb8-8" title="8"></a>
-<a class="sourceLine" id="cb8-9" title="9"><span class="co">#&gt; Warning in bind_rows_(x, .id): binding character and factor vector,</span></a>
-<a class="sourceLine" id="cb8-10" title="10"><span class="co">#&gt; coercing into character vector</span></a>
+<a class="sourceLine" id="cb8-9" title="9"><span class="co">#&gt; Warning in bind_rows_(x, .id): binding character and factor vector, coercing</span></a>
+<a class="sourceLine" id="cb8-10" title="10"><span class="co">#&gt; into character vector</span></a>
 <a class="sourceLine" id="cb8-11" title="11"></a>
-<a class="sourceLine" id="cb8-12" title="12"><span class="co">#&gt; Warning in bind_rows_(x, .id): binding character and factor vector,</span></a>
-<a class="sourceLine" id="cb8-13" title="13"><span class="co">#&gt; coercing into character vector</span></a></code></pre></div>
+<a class="sourceLine" id="cb8-12" title="12"><span class="co">#&gt; Warning in bind_rows_(x, .id): binding character and factor vector, coercing</span></a>
+<a class="sourceLine" id="cb8-13" title="13"><span class="co">#&gt; into character vector</span></a></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="left">Modèle</th>
@@ -421,18 +427,18 @@
 </tbody>
 </table>
 </div>
-<div id="resultats" class="section level2">
+<div id="résultats" class="section level2">
 <h2 class="hasAnchor">
-<a href="#resultats" class="anchor"></a>Résultats</h2>
+<a href="#r%C3%A9sultats" class="anchor"></a>Résultats</h2>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">test_dt &lt;-<span class="st"> </span>test <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>ClNr)</a>
-<a class="sourceLine" id="cb9-2" title="2">test_tsk &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/mlr/topics/RegrTask">makeRegrTask</a></span>(<span class="dt">data =</span> test_dt, <span class="dt">target =</span> <span class="st">'Ultimate'</span>)</a>
-<a class="sourceLine" id="cb9-3" title="3"><span class="co">#&gt; Warning in makeTask(type = type, data = data, weights = weights, blocking</span></a>
-<a class="sourceLine" id="cb9-4" title="4"><span class="co">#&gt; = blocking, : Provided data is not a pure data.frame but from class tbl_df,</span></a>
-<a class="sourceLine" id="cb9-5" title="5"><span class="co">#&gt; hence it will be converted.</span></a></code></pre></div>
+<a class="sourceLine" id="cb9-2" title="2">test_tsk &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/mlr/man/RegrTask.html">makeRegrTask</a></span>(<span class="dt">data =</span> test_dt, <span class="dt">target =</span> <span class="st">'Ultimate'</span>)</a>
+<a class="sourceLine" id="cb9-3" title="3"><span class="co">#&gt; Warning in makeTask(type = type, data = data, weights = weights, blocking =</span></a>
+<a class="sourceLine" id="cb9-4" title="4"><span class="co">#&gt; blocking, : Provided data is not a pure data.frame but from class tbl_df, hence</span></a>
+<a class="sourceLine" id="cb9-5" title="5"><span class="co">#&gt; it will be converted.</span></a></code></pre></div>
 <p>Les modèles sont déjà inclus dans le package pour l’exemple</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1">pred_a &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/predict">predict</a></span>(fit_a, test_tsk)</a>
-<a class="sourceLine" id="cb10-2" title="2">pred_b &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/predict">predict</a></span>(fit_b, test_tsk)</a>
-<a class="sourceLine" id="cb10-3" title="3">pred_c &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/predict">predict</a></span>(fit_c, test_tsk)</a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1">pred_a &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span>(fit_a, test_tsk)</a>
+<a class="sourceLine" id="cb10-2" title="2">pred_b &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span>(fit_b, test_tsk)</a>
+<a class="sourceLine" id="cb10-3" title="3">pred_c &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span>(fit_c, test_tsk)</a></code></pre></div>
 <p>Mettre ensemble les variables explicatives et les prédictions</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1">test_pred_a &lt;-<span class="st"> </span>test_dt <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb11-2" title="2"><span class="st">    </span><span class="kw">rownames_to_column</span>(<span class="st">'id'</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
@@ -447,36 +453,36 @@
 <a class="sourceLine" id="cb11-11" title="11"><span class="st">    </span><span class="kw">mutate_at</span>(<span class="kw">vars</span>(id), as.integer) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb11-12" title="12"><span class="st">    </span><span class="kw">left_join</span>(pred_c<span class="op">$</span>data, <span class="dt">by =</span> <span class="st">"id"</span>)</a></code></pre></div>
 </div>
-<div id="distribution-predictive-des-reserves-totales-bootstrap" class="section level2">
+<div id="distribution-prédictive-des-réserves-totales-bootstrap" class="section level2">
 <h2 class="hasAnchor">
-<a href="#distribution-predictive-des-reserves-totales-bootstrap" class="anchor"></a>Distribution prédictive des réserves totales (Bootstrap)</h2>
+<a href="#distribution-pr%C3%A9dictive-des-r%C3%A9serves-totales-bootstrap" class="anchor"></a>Distribution prédictive des réserves totales (Bootstrap)</h2>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1"><span class="co">## Vraie réserve (selon données simulées du test set)</span></a>
-<a class="sourceLine" id="cb12-2" title="2">vraie_reserve &lt;-<span class="st"> </span>test_dt <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarise</span>(<span class="dt">paye =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sum">sum</a></span>(Paid), <span class="dt">total =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sum">sum</a></span>(Ultimate), <span class="dt">R =</span> total <span class="op">-</span><span class="st"> </span>paye)</a>
+<a class="sourceLine" id="cb12-2" title="2">vraie_reserve &lt;-<span class="st"> </span>test_dt <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarise</span>(<span class="dt">paye =</span> <span class="kw"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(Paid), <span class="dt">total =</span> <span class="kw"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(Ultimate), <span class="dt">R =</span> total <span class="op">-</span><span class="st"> </span>paye)</a>
 <a class="sourceLine" id="cb12-3" title="3"></a>
 <a class="sourceLine" id="cb12-4" title="4"><span class="co">## Calcul des réserves totales selon chaque modèle</span></a>
-<a class="sourceLine" id="cb12-5" title="5">aa &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/apply">apply</a></span>(bs_pred_a, <span class="dv">2</span>, sum)</a>
-<a class="sourceLine" id="cb12-6" title="6">bs_res_a &lt;-<span class="st"> </span>(aa <span class="op">-</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sum">sum</a></span>(test_dt<span class="op">$</span>Paid)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">A =</span> .)</a>
+<a class="sourceLine" id="cb12-5" title="5">aa &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/apply.html">apply</a></span>(bs_pred_a, <span class="dv">2</span>, sum)</a>
+<a class="sourceLine" id="cb12-6" title="6">bs_res_a &lt;-<span class="st"> </span>(aa <span class="op">-</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(test_dt<span class="op">$</span>Paid)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="dt">A =</span> .)</a>
 <a class="sourceLine" id="cb12-7" title="7"></a>
-<a class="sourceLine" id="cb12-8" title="8">bb &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/apply">apply</a></span>(bs_pred_b, <span class="dv">2</span>, sum)</a>
-<a class="sourceLine" id="cb12-9" title="9">bs_res_b &lt;-<span class="st"> </span>(bb <span class="op">-</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sum">sum</a></span>(test_dt<span class="op">$</span>Paid)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">B =</span> .)</a>
+<a class="sourceLine" id="cb12-8" title="8">bb &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/apply.html">apply</a></span>(bs_pred_b, <span class="dv">2</span>, sum)</a>
+<a class="sourceLine" id="cb12-9" title="9">bs_res_b &lt;-<span class="st"> </span>(bb <span class="op">-</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(test_dt<span class="op">$</span>Paid)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="dt">B =</span> .)</a>
 <a class="sourceLine" id="cb12-10" title="10"></a>
-<a class="sourceLine" id="cb12-11" title="11">cc &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/apply">apply</a></span>(bs_pred_c, <span class="dv">2</span>, sum)</a>
-<a class="sourceLine" id="cb12-12" title="12">bs_res_c &lt;-<span class="st"> </span>(cc <span class="op">-</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sum">sum</a></span>(test_dt<span class="op">$</span>Paid)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">C =</span> .)</a></code></pre></div>
+<a class="sourceLine" id="cb12-11" title="11">cc &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/apply.html">apply</a></span>(bs_pred_c, <span class="dv">2</span>, sum)</a>
+<a class="sourceLine" id="cb12-12" title="12">bs_res_c &lt;-<span class="st"> </span>(cc <span class="op">-</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(test_dt<span class="op">$</span>Paid)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="dt">C =</span> .)</a></code></pre></div>
 <p>Et on obtient le tableau suivant :</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="kw">bind_cols</span>(bs_res_a, bs_res_b, bs_res_c) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb13-2" title="2"><span class="st">    </span><span class="kw">gather</span>(<span class="st">'Modèle'</span>, <span class="st">'Réserve'</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb13-3" title="3"><span class="st">    </span><span class="kw">group_by</span>(Modèle) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb13-4" title="4"><span class="st">    </span><span class="kw">nest</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb13-5" title="5"><span class="st">    </span><span class="kw">mutate</span>(</a>
-<a class="sourceLine" id="cb13-6" title="6">        <span class="dt">moyenne =</span> <span class="kw">map_dbl</span>(data,<span class="cf">function</span>(x) <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/unlist">unlist</a></span>(x) <span class="op">%&gt;%</span><span class="st">  </span>mean),</a>
-<a class="sourceLine" id="cb13-7" title="7">        <span class="dt">sd =</span> <span class="kw">map_dbl</span>(data,<span class="cf">function</span>(x) <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/unlist">unlist</a></span>(x) <span class="op">%&gt;%</span><span class="st">  </span>sd),</a>
-<a class="sourceLine" id="cb13-8" title="8">        <span class="dt">VaR95 =</span> <span class="kw">map_dbl</span>(data,<span class="cf">function</span>(x) <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/unlist">unlist</a></span>(x) <span class="op">%&gt;%</span><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/quantile">quantile</a></span>(., <span class="dt">probs =</span> <span class="fl">.95</span>)),</a>
-<a class="sourceLine" id="cb13-9" title="9">        <span class="dt">VaR99 =</span> <span class="kw">map_dbl</span>(data,<span class="cf">function</span>(x) <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/unlist">unlist</a></span>(x) <span class="op">%&gt;%</span><span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/quantile">quantile</a></span>(., <span class="dt">probs =</span> <span class="fl">.99</span>))</a>
+<a class="sourceLine" id="cb13-6" title="6">        <span class="dt">moyenne =</span> <span class="kw">map_dbl</span>(data,<span class="cf">function</span>(x) <span class="kw"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span>(x) <span class="op">%&gt;%</span><span class="st">  </span>mean),</a>
+<a class="sourceLine" id="cb13-7" title="7">        <span class="dt">sd =</span> <span class="kw">map_dbl</span>(data,<span class="cf">function</span>(x) <span class="kw"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span>(x) <span class="op">%&gt;%</span><span class="st">  </span>sd),</a>
+<a class="sourceLine" id="cb13-8" title="8">        <span class="dt">VaR95 =</span> <span class="kw">map_dbl</span>(data,<span class="cf">function</span>(x) <span class="kw"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span>(x) <span class="op">%&gt;%</span><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(., <span class="dt">probs =</span> <span class="fl">.95</span>)),</a>
+<a class="sourceLine" id="cb13-9" title="9">        <span class="dt">VaR99 =</span> <span class="kw">map_dbl</span>(data,<span class="cf">function</span>(x) <span class="kw"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span>(x) <span class="op">%&gt;%</span><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(., <span class="dt">probs =</span> <span class="fl">.99</span>))</a>
 <a class="sourceLine" id="cb13-10" title="10">    ) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb13-11" title="11"><span class="st">    </span><span class="kw">select</span>(<span class="op">-</span>data) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb13-12" title="12"><span class="st">    </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb13-13" title="13"><span class="st">    </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/format">format</a></span>(<span class="dt">big.mark =</span> <span class="st">' '</span>, <span class="dt">justify =</span> <span class="st">'centre'</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb13-14" title="14"><span class="st">  </span>knitr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/knitr/topics/kable">kable</a></span>()</a></code></pre></div>
+<a class="sourceLine" id="cb13-12" title="12"><span class="st">    </span><span class="kw"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb13-13" title="13"><span class="st">    </span><span class="kw"><a href="https://rdrr.io/r/base/format.html">format</a></span>(<span class="dt">big.mark =</span> <span class="st">' '</span>, <span class="dt">justify =</span> <span class="st">'centre'</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb13-14" title="14"><span class="st">  </span>knitr<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>()</a></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="left">Modèle</th>
@@ -520,9 +526,9 @@
 <a class="sourceLine" id="cb14-8" title="8"><span class="st">    </span><span class="kw">labs</span>(<span class="dt">fill =</span> <span class="st">'Modèles'</span>, <span class="dt">x =</span> <span class="st">'Réserve totale'</span>, <span class="dt">y =</span> <span class="st">'Probabilité'</span>) <span class="op">+</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb14-9" title="9"><span class="st">    </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> vraie_reserve<span class="op">$</span>R, <span class="dt">linetype =</span> <span class="st">'dashed'</span>)</a></code></pre></div>
 <p><img src="implementation_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
-<div id="graphique-des-predictions-en-fonction-de-la-vraie-valeur" class="section level3">
+<div id="graphique-des-prédictions-en-fonction-de-la-vraie-valeur" class="section level3">
 <h3 class="hasAnchor">
-<a href="#graphique-des-predictions-en-fonction-de-la-vraie-valeur" class="anchor"></a>Graphique des prédictions en fonction de la vraie valeur</h3>
+<a href="#graphique-des-pr%C3%A9dictions-en-fonction-de-la-vraie-valeur" class="anchor"></a>Graphique des prédictions en fonction de la vraie valeur</h3>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1">zoom_out_pred &lt;-<span class="st"> </span>pred_c<span class="op">$</span>data <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb15-2" title="2"><span class="st">    </span><span class="co"># filter(response &gt; 0) %&gt;% </span></a>
 <a class="sourceLine" id="cb15-3" title="3"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> truth, <span class="dt">y =</span> response)) <span class="op">+</span><span class="st"> </span></a>
@@ -544,10 +550,10 @@
 <a class="sourceLine" id="cb15-19" title="19"><span class="st">    </span><span class="co"># geom_vline(xintercept = qq, col = 'red', linetype = 'dashed') + </span></a>
 <a class="sourceLine" id="cb15-20" title="20"><span class="st">    </span><span class="kw">geom_abline</span>(<span class="dt">intercept =</span> <span class="dv">0</span>, <span class="dt">slope =</span> <span class="dv">1</span>, </a>
 <a class="sourceLine" id="cb15-21" title="21">                <span class="dt">col =</span> <span class="st">'blue'</span>, <span class="dt">size =</span> <span class="dv">1</span>, <span class="dt">linetype =</span> <span class="st">'dashed'</span>) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb15-22" title="22"><span class="st">    </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">0</span>, <span class="dv">200000</span>), <span class="dt">ylim =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">0</span>,<span class="dv">200000</span>)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb15-22" title="22"><span class="st">    </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">0</span>, <span class="dv">200000</span>), <span class="dt">ylim =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">0</span>,<span class="dv">200000</span>)) <span class="op">+</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb15-23" title="23"><span class="st">    </span><span class="kw">labs</span>(<span class="dt">y =</span> <span class="st">'Valeur prédite'</span>)</a>
-<a class="sourceLine" id="cb15-24" title="24">zoom &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/gridExtra/topics/arrangeGrob">arrangeGrob</a></span>(zoom_out_pred, zoom_in_pred)</a>
-<a class="sourceLine" id="cb15-25" title="25"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(zoom)</a></code></pre></div>
+<a class="sourceLine" id="cb15-24" title="24">zoom &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/gridExtra/man/arrangeGrob.html">arrangeGrob</a></span>(zoom_out_pred, zoom_in_pred)</a>
+<a class="sourceLine" id="cb15-25" title="25"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(zoom)</a></code></pre></div>
 <p><img src="implementation_files/figure-html/unnamed-chunk-13-1.png" width="700"></p>
 </div>
 <div id="prediction-lift" class="section level3">
@@ -565,11 +571,11 @@
 <a class="sourceLine" id="cb16-10" title="10">        dt <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb16-11" title="11"><span class="st">            </span><span class="kw">transmute</span>(<span class="dt">quantile =</span> <span class="kw">ntile</span>(response, <span class="dt">n =</span> <span class="dv">5</span>))</a>
 <a class="sourceLine" id="cb16-12" title="12">    })) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb16-13" title="13"><span class="st">    </span><span class="kw">unnest</span>(<span class="dt">cols =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(data, quantile)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>id) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb16-13" title="13"><span class="st">    </span><span class="kw">unnest</span>(<span class="dt">cols =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(data, quantile)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>id) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb16-14" title="14"><span class="st">    </span><span class="kw">group_by</span>(Modèle, quantile) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb16-15" title="15"><span class="st">    </span><span class="kw">summarise</span>(</a>
-<a class="sourceLine" id="cb16-16" title="16">        <span class="dt">reel_moyen =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(truth),</a>
-<a class="sourceLine" id="cb16-17" title="17">        <span class="dt">rmse_moyen =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/MathFun">sqrt</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>((truth <span class="op">-</span><span class="st"> </span>response)<span class="op">^</span><span class="dv">2</span>))</a>
+<a class="sourceLine" id="cb16-16" title="16">        <span class="dt">reel_moyen =</span> <span class="kw"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(truth),</a>
+<a class="sourceLine" id="cb16-17" title="17">        <span class="dt">rmse_moyen =</span> <span class="kw"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>((truth <span class="op">-</span><span class="st"> </span>response)<span class="op">^</span><span class="dv">2</span>))</a>
 <a class="sourceLine" id="cb16-18" title="18">    ) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb16-19" title="19"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">quantile =</span> <span class="kw">case_when</span>(</a>
 <a class="sourceLine" id="cb16-20" title="20">        quantile <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">~</span><span class="st"> "(0, 20)"</span>,</a>
@@ -586,7 +592,7 @@
 <a class="sourceLine" id="cb16-31" title="31"><span class="st">    </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> rmse_moyen), <span class="dt">col =</span> <span class="st">'red'</span>) <span class="op">+</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb16-32" title="32"><span class="st">    </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">'bottom'</span>, </a>
 <a class="sourceLine" id="cb16-33" title="33">          <span class="dt">axis.text =</span> <span class="kw">element_text</span>(<span class="dt">angle =</span> <span class="dv">90</span>, <span class="dt">hjust =</span> <span class="dv">1</span>, <span class="dt">vjust =</span> <span class="fl">0.5</span>)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb16-34" title="34"><span class="st">    </span><span class="kw">coord_cartesian</span>(<span class="dt">ylim =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">0</span>, <span class="dv">15000</span>)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb16-34" title="34"><span class="st">    </span><span class="kw">coord_cartesian</span>(<span class="dt">ylim =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">0</span>, <span class="dv">15000</span>)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb16-35" title="35"><span class="st">    </span><span class="kw">labs</span>(</a>
 <a class="sourceLine" id="cb16-36" title="36">        <span class="dt">y =</span> <span class="st">"Valeur réelle moyenne"</span>,</a>
 <a class="sourceLine" id="cb16-37" title="37">        <span class="dt">x =</span> <span class="st">"Regroupement des quantiles de la variable réponse"</span>, <span class="dt">col =</span> <span class="ot">NULL</span>) <span class="op">+</span><span class="st"> </span></a>
@@ -600,27 +606,27 @@
 <a class="sourceLine" id="cb17-2" title="2"><span class="st">    </span><span class="kw">scale_x_discrete</span>(<span class="dt">limits =</span> <span class="dv">0</span><span class="op">:</span><span class="dv">11</span>)</a></code></pre></div>
 <p><img src="implementation_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
 </div>
-<div id="graphique-des-residus-du-modele-c" class="section level3">
+<div id="graphique-des-résidus-du-modèle-c" class="section level3">
 <h3 class="hasAnchor">
-<a href="#graphique-des-residus-du-modele-c" class="anchor"></a>Graphique des résidus du modèle C</h3>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Random">set.seed</a></span>(<span class="dv">2019</span>)</a>
+<a href="#graphique-des-r%C3%A9sidus-du-mod%C3%A8le-c" class="anchor"></a>Graphique des résidus du modèle C</h3>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="dv">2019</span>)</a>
 <a class="sourceLine" id="cb18-2" title="2">pred_a<span class="op">$</span>data <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb18-3" title="3"><span class="st">    </span><span class="kw">sample_frac</span>(.<span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb18-4" title="4"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">erreur =</span> truth <span class="op">-</span><span class="st"> </span>response) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb18-5" title="5"><span class="st">    </span><span class="kw">ggplot</span>() <span class="op">+</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb18-6" title="6"><span class="st">    </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> erreur), <span class="dt">binwidth =</span> <span class="dv">100</span>) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb18-7" title="7"><span class="st">    </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="op">-</span><span class="dv">2000</span>, <span class="dv">2000</span>)) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb18-8" title="8"><span class="st">    </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/expression">expression</a></span>(<span class="dt">epsilon =</span> y[i] <span class="op">-</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/influence.measures">hat</a></span>(y)[i]),</a>
+<a class="sourceLine" id="cb18-7" title="7"><span class="st">    </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="op">-</span><span class="dv">2000</span>, <span class="dv">2000</span>)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb18-8" title="8"><span class="st">    </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="kw"><a href="https://rdrr.io/r/base/expression.html">expression</a></span>(<span class="dt">epsilon =</span> y[i] <span class="op">-</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/influence.measures.html">hat</a></span>(y)[i]),</a>
 <a class="sourceLine" id="cb18-9" title="9">         <span class="dt">y =</span> <span class="st">'Fréquence'</span>,</a>
 <a class="sourceLine" id="cb18-10" title="10">         <span class="dt">caption =</span> <span class="st">'Échantillon aléatoire de 10% des prédictions sur les données de validation'</span>) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb18-11" title="11"><span class="st">    </span><span class="kw">scale_y_discrete</span>(<span class="dt">limits =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">0</span>, <span class="dv">2000</span>, <span class="dv">100</span>)) </a></code></pre></div>
+<a class="sourceLine" id="cb18-11" title="11"><span class="st">    </span><span class="kw">scale_y_discrete</span>(<span class="dt">limits =</span> <span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="dv">0</span>, <span class="dv">2000</span>, <span class="dv">100</span>)) </a></code></pre></div>
 <p><img src="implementation_files/figure-html/unnamed-chunk-15-1.png" width="700"></p>
 </div>
 </div>
-<div id="interptetabilite-des-modeles" class="section level1">
+<div id="interptétabilité-des-modèles" class="section level1">
 <h1 class="hasAnchor">
-<a href="#interptetabilite-des-modeles" class="anchor"></a>Interptétabilité des modèles</h1>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Random">set.seed</a></span>(<span class="dv">2019</span>)</a>
+<a href="#interpt%C3%A9tabilit%C3%A9-des-mod%C3%A8les" class="anchor"></a>Interptétabilité des modèles</h1>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span>(<span class="dv">2019</span>)</a>
 <a class="sourceLine" id="cb19-2" title="2">predictor_a &lt;-<span class="st"> </span>test_dt <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb19-3" title="3"><span class="st">    </span><span class="co"># On sélectionne 30 observations par année de développement</span></a>
 <a class="sourceLine" id="cb19-4" title="4"><span class="st">    </span><span class="kw">group_by</span>(devYear) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sample_n</span>(<span class="dv">30</span>) <span class="op">%&gt;%</span></a>
@@ -642,9 +648,9 @@
 <div id="graphique-des-feature-importance" class="section level3">
 <h3 class="hasAnchor">
 <a href="#graphique-des-feature-importance" class="anchor"></a>Graphique des Feature importance</h3>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1">varimp_a &lt;-<span class="st"> </span>FeatureImp<span class="op">$</span><span class="kw">new</span>(predictor_a, <span class="dt">loss =</span> <span class="st">"mse"</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>() <span class="op">+</span><span class="st"> </span><span class="kw">theme_classic</span>()</a>
-<a class="sourceLine" id="cb20-2" title="2">varimp_b &lt;-<span class="st"> </span>FeatureImp<span class="op">$</span><span class="kw">new</span>(predictor_b, <span class="dt">loss =</span> <span class="st">"mse"</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>() <span class="op">+</span><span class="st"> </span><span class="kw">theme_classic</span>()</a>
-<a class="sourceLine" id="cb20-3" title="3">varimp_c &lt;-<span class="st"> </span>FeatureImp<span class="op">$</span><span class="kw">new</span>(predictor_c, <span class="dt">loss =</span> <span class="st">"mse"</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>() <span class="op">+</span><span class="st"> </span><span class="kw">theme_classic</span>()</a>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1">varimp_a &lt;-<span class="st"> </span>FeatureImp<span class="op">$</span><span class="kw">new</span>(predictor_a, <span class="dt">loss =</span> <span class="st">"mse"</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>() <span class="op">+</span><span class="st"> </span><span class="kw">theme_classic</span>()</a>
+<a class="sourceLine" id="cb20-2" title="2">varimp_b &lt;-<span class="st"> </span>FeatureImp<span class="op">$</span><span class="kw">new</span>(predictor_b, <span class="dt">loss =</span> <span class="st">"mse"</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>() <span class="op">+</span><span class="st"> </span><span class="kw">theme_classic</span>()</a>
+<a class="sourceLine" id="cb20-3" title="3">varimp_c &lt;-<span class="st"> </span>FeatureImp<span class="op">$</span><span class="kw">new</span>(predictor_c, <span class="dt">loss =</span> <span class="st">"mse"</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>() <span class="op">+</span><span class="st"> </span><span class="kw">theme_classic</span>()</a>
 <a class="sourceLine" id="cb20-4" title="4"><span class="co"># grid.arrange(varimp_a, varimp_b, varimp_c, nrow = 3)</span></a>
 <a class="sourceLine" id="cb20-5" title="5">varimp_c</a></code></pre></div>
 <p><img src="implementation_files/figure-html/feature-importance-1.png" width="700"></p>
@@ -652,18 +658,18 @@
 <div id="pdpice-plots" class="section level3">
 <h3 class="hasAnchor">
 <a href="#pdpice-plots" class="anchor"></a>PDP/ICE plots</h3>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1">var2check &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">'Paid'</span>, <span class="st">'Open'</span>)</a>
-<a class="sourceLine" id="cb21-2" title="2">pdp_ice &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(var2check,</a>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1">var2check &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">'Paid'</span>, <span class="st">'Open'</span>)</a>
+<a class="sourceLine" id="cb21-2" title="2">pdp_ice &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span>(var2check,</a>
 <a class="sourceLine" id="cb21-3" title="3">                 <span class="cf">function</span>(var){</a>
 <a class="sourceLine" id="cb21-4" title="4">                     FeatureEffect<span class="op">$</span><span class="kw">new</span>(predictor_a,</a>
 <a class="sourceLine" id="cb21-5" title="5">                                       <span class="dt">feature =</span> var,</a>
 <a class="sourceLine" id="cb21-6" title="6">                                       <span class="dt">method =</span> <span class="st">'pdp+ice'</span>,</a>
 <a class="sourceLine" id="cb21-7" title="7">                                       <span class="dt">center.at =</span> <span class="dv">0</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb21-8" title="8"><span class="st">                         </span><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>() <span class="op">+</span><span class="st"> </span><span class="kw">theme_classic</span>() <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb21-8" title="8"><span class="st">                         </span><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>() <span class="op">+</span><span class="st"> </span><span class="kw">theme_classic</span>() <span class="op">+</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb21-9" title="9"><span class="st">                         </span><span class="kw">theme</span>(<span class="dt">axis.text =</span> <span class="kw">element_text</span>(<span class="dt">angle =</span> <span class="dv">90</span>, <span class="dt">hjust =</span> <span class="dv">1</span>, <span class="dt">vjust =</span> <span class="fl">0.5</span>))</a>
 <a class="sourceLine" id="cb21-10" title="10">                 })</a>
 <a class="sourceLine" id="cb21-11" title="11"><span class="co"># Produire les 4 graphiques dans une seule figure.</span></a>
-<a class="sourceLine" id="cb21-12" title="12"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/do.call">do.call</a></span>(<span class="st">'grid.arrange'</span>, pdp_ice)</a></code></pre></div>
+<a class="sourceLine" id="cb21-12" title="12"><span class="kw"><a href="https://rdrr.io/r/base/do.call.html">do.call</a></span>(<span class="st">'grid.arrange'</span>, pdp_ice)</a></code></pre></div>
 <p><img src="implementation_files/figure-html/pdp-ice-plots-1.png" width="700"></p>
 </div>
 </div>
@@ -675,14 +681,14 @@
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-<li><a href="#importation-des-donnees">Importation des données</a></li>
-      <li><a href="#manipulation-des-donnees">Manipulation des données</a></li>
-      <li><a href="#modele-c-estimation-des-ldf">Modèle C : estimation des LDF</a></li>
-      <li><a href="#preparer-les-jeux-de-donnees">Préparer les jeux de données</a></li>
+<li><a href="#importation-des-donn%C3%A9es">Importation des données</a></li>
+      <li><a href="#manipulation-des-donn%C3%A9es">Manipulation des données</a></li>
+      <li><a href="#mod%C3%A8le-c-estimation-des-ldf">Modèle C : estimation des LDF</a></li>
+      <li><a href="#pr%C3%A9parer-les-jeux-de-donn%C3%A9es">Préparer les jeux de données</a></li>
       <li><a href="#entrainement">Entrainement</a></li>
-      <li><a href="#resultats">Résultats</a></li>
-      <li><a href="#distribution-predictive-des-reserves-totales-bootstrap">Distribution prédictive des réserves totales (Bootstrap)</a></li>
-      <li><a href="#interptetabilite-des-modeles">Interptétabilité des modèles</a></li>
+      <li><a href="#r%C3%A9sultats">Résultats</a></li>
+      <li><a href="#distribution-pr%C3%A9dictive-des-r%C3%A9serves-totales-bootstrap">Distribution prédictive des réserves totales (Bootstrap)</a></li>
+      <li><a href="#interpt%C3%A9tabilit%C3%A9-des-mod%C3%A8les">Interptétabilité des modèles</a></li>
       </ul>
 </div>
       </div>
@@ -690,17 +696,20 @@
 </div>
 
 
+
       <footer><div class="copyright">
   <p>Developed by <a href="https://github.com/gabrielcrepeault">Gabriel Crépeault-Cauchon</a>.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
 </div>
 
   
+
 
   </body>
 </html>

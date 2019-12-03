@@ -14,8 +14,10 @@ bsPredDistribution(learner, train_tsk, test_tsk, B = 100)
 \item{B}{Nombre d'échantillonage Bootstrap à effectuer. Défaut = 100}
 }
 \value{
-Un data.frame contenant une ligne par observations, une colonne par prédiction
-Bootstrap (i.e. n lignes x B colonnes).
+Une liste contenant :
+- predictions : un data.frame contenant une ligne par
+observations, une colonne par modèle Bootstrap.
+- bs_models : liste contenant tous les modèles (provenant du resampling) Bootstrap.
 }
 \description{
 Fonction wrapper qui effectue un rééchantillonage Bootstrap sur le

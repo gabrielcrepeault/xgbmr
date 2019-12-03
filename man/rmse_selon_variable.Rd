@@ -7,7 +7,7 @@
 rmse_selon_variable(pred, var, show.table = F)
 }
 \arguments{
-\item{pred}{Un data.frame contenant, au minimum : 
+\item{pred}{Un data.frame contenant, au minimum :
 - "truth" : la vraie valeur à prédire
 - "response" : valeur prédite
 - "var" : la variable explicative qu'on veut illustrer sur le graphique.}

@@ -12,8 +12,10 @@
 #' @param train_tsk Tâche mlr de validation
 #' @param B Nombre d'échantillonage Bootstrap à effectuer. Défaut = 100
 #'
-#' @return Un data.frame contenant une ligne par observations, une colonne par prédiction
-#' Bootstrap (i.e. n lignes x B colonnes).
+#' @return Une liste contenant :
+#' - predictions : un data.frame contenant une ligne par
+#' observations, une colonne par modèle Bootstrap.
+#' - bs_models : liste contenant tous les modèles (provenant du resampling) Bootstrap.
 #'
 #'
 #' @export

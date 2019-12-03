@@ -5,10 +5,14 @@
 \alias{fit_a}
 \title{Model A}
 \format{R object}
+\source{
+Duval, F., & Pigeon, M. (2019). Individual loss reserving using a gradient boosting-based approach. Risks, 7(3), 79.
+}
 \usage{
 fit_a
 }
 \description{
-Model A
+Modèle (déjà entrainé) correspondant au modèle A présenté
+dans l'article de référence.
 }
 \keyword{datasets}
