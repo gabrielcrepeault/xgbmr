@@ -93,11 +93,10 @@ l'entrainement d'un modèle" />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../../doc/rapport_2019.pdf">Projet de recherche A2019</a>
-    </li>
-    <li class="divider"></li>
-    <li>
       <a href="../articles/implementation.html">Exemple d'implémentation en R</a>
+    </li>
+    <li>
+      <a href="../articles/entrainement_modeles.html">Entrainement des modèles</a>
     </li>
   </ul>
 </li>
@@ -133,7 +132,7 @@ l'entrainement d'un modèle" />
 l'entrainement d'un modèle</p>
     </div>
 
-    <pre class="usage"><span class='fu'>setup_training_env</span>(<span class='no'>model_name</span>)</pre>
+    <pre class="usage"><span class='fu'>setup_training_env</span>(<span class='no'>model_name</span>, <span class='kw'>root</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(<span class='st'>"models"</span>, <span class='no'>model_name</span>))</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">

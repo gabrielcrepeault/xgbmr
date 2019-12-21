@@ -4,7 +4,7 @@
 \alias{setup_training_env}
 \title{setup_training_env}
 \usage{
-setup_training_env(model_name)
+setup_training_env(model_name, root = file.path("models", model_name))
 }
 \arguments{
 \item{model_name}{}

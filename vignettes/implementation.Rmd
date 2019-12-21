@@ -137,6 +137,9 @@ fit_a$learner$par.vals  %>% data.frame(Modèle = 'A', .) %>%
   knitr::kable()
 ```
 
+> Note : la vignette entrainement_modeles permet d'avoir un peu plus de détail sur la procédure.
+
+
 ## Résultats
 
 ```{r}

@@ -9,8 +9,7 @@
 #'
 #'
 #' @export
-setup_training_env <- function(model_name){
-    root <- file.path('models', model_name)
+setup_training_env <- function(model_name, root = file.path('models', model_name)){
     if (!dir.exists(root)){
         cat(paste0("Initialisation du dossier pour le modèle '", model_name, "' ... \n"))
         cat("Voir le fichier LOGFILE créé pour comprendre la structure.")

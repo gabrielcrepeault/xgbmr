@@ -23,11 +23,10 @@ navbar:
         articles:
             text: Articles
             menu:
-            - text: Projet de recherche A2019
-              href: ../doc/rapport_2019.pdf
-            - text: "---"
             - text: Exemple d'implémentation en R
               href: articles/implementation.html
+            - text: Entrainement des modèles
+              href: articles/entrainement_modeles.html
         github:
             icon: fa-github fa-lg
             text: "Code source"

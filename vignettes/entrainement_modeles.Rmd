@@ -1,0 +1,75 @@
+---
+title: "Entrainement des modèles"
+author: "Gabriel Crépeault-Cauchon"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+    %\VignetteIndexEntry{Implémentation en R du modèle}
+    %\VignetteEngine{knitr::rmarkdown}
+    %\VignetteEncoding{UTF-8}
+---
+
+> TODO: texte pour accompagner le code présenté ici.
+
+
+## Importation des packages nécessaires et données
+
+```{r eval=FALSE, echo=TRUE}
+library(mlr)
+library(tidyverse)
+library(xgbmr)
+
+## Importer les 3 données différents et créer les 3 tâches
+traindt_a <- read.csv('../data/train_a.csv') # modèle A
+traindt_b <- read.csv('../data/train_b.csv') # modèle B
+traindt_c <- read.csv('../data/train_c.csv') # modèle C
+tsk_a <- makeRegrTask(data = select(traindt_a, -ClNr), target = 'Ultimate')
+tsk_b <- makeRegrTask(data = select(traindt_b, -ClNr), target = 'Ultimate')
+tsk_c <- makeRegrTask(data = select(traindt_c, -ClNr), target = 'Ultimate')
+
+## Créer les environnements d'entrainement (fonction custom de xgbmr)
+lapply(c('modele_a', 'modele_b', 'modele_c'), setup_training_env)
+
+## Créer le learner. Hyperparamètres fixés.
+xgb_pars <- list(
+    objective="reg:squarederror",
+    eval_metric = 'rmse',
+    eta = 0.1,
+    max_depth = 3,
+    min_child_weight = 20, 
+    # gamma = 10,
+    verbose = 0,
+    subsample = 0.5,
+    colsample_bytree = 0.5
+    # alpha = 1,
+    # lambda = 1
+)
+lrn_init <- makeLearner(cl = 'regr.xgboost', id = "xgb_initial", par.vals = xgb_pars)
+
+## Seed pour résultats reproductibles
+set.seed(2019)
+
+## Modèle A ####
+ntree_a <- tune_nrounds(lrn_init, task = tsk_a, root = "", export = F, plot = F,
+                        early_stopping_rounds = 10, iters = 3000)
+fit_a <- setLearnerId(learner = ntree_a$updated_learner, id = "modele_a") %>% 
+    train(task = tsk_a)
+
+saveRDS(fit_a, file = file.path('models', fit_a$learner$id, paste0(fit_a$learner$id, '.rda')))
+
+## Modèle B ####
+ntree_b <- tune_nrounds(lrn_init, task = tsk_b, root = "", export = F, plot = F,
+                        early_stopping_rounds = 10, iters = 3000)
+fit_b <- setLearnerId(learner = ntree_b$updated_learner, id = "modele_b") %>% 
+    train(task = tsk_b)
+
+saveRDS(fit_b, file = file.path('models', fit_b$learner$id, paste0(fit_b$learner$id, '.rda')))
+
+## Modèle C ####
+ntree_c <- tune_nrounds(lrn_init, task = tsk_c, root = "", export = F, plot = F,
+                        early_stopping_rounds = 10, iters = 3000) 
+fit_c <- setLearnerId(learner = ntree_c$updated_learner, id = "modele_c") %>% 
+    train(task = tsk_a)
+
+saveRDS(fit_c, file = file.path('models', fit_c$learner$id, paste0(fit_c$learner$id, '.rda')))
+```
